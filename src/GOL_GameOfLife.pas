@@ -33,8 +33,7 @@ type
 
   TGOLGridSettings = class
   private
-    FColCount: integer;
-    FRowCount: integer;
+    FColCount, FRowCount: integer;
   public
     constructor Create(AColCount, ARowCount: integer);
     property ColumnCount: integer read FColCount write FColCount;
@@ -43,8 +42,7 @@ type
 
   TGOLCell = class
   private
-    FRow: integer;
-    FCol: integer;
+    FRow, FCol: integer;
     FRect: TRect;
     FAlive: boolean;
     FColor: TColor;
@@ -184,8 +182,7 @@ end;
 {------------------------------------------------------------------------------}
 function TGOLCellList.GetNeighboursForCell(SelectedCell: TGOLCell; LiveOnly: boolean = False): TGOLCellList;
 var
-  TopRow, BottomRow, LeftColumn, RightColumn: integer;
-  LoopIndex: integer;
+  LoopIndex, TopRow, BottomRow, LeftColumn, RightColumn: integer;
   ACell: TGOLCell;
 begin
   Result := TGOLCellList.Create(False, FGridSettings);
@@ -240,16 +237,6 @@ begin
       if (ACell.Column = LeftColumn) or (ACell.Column = SelectedCell.Column) or (ACell.Column = RightColumn) then
         Result.Add(ACell);
     end;
-
-    {// Get top left/right neighbours...
-    if (ACell.Column = SelectedCell.Column - 1) and ((ACell.Row = SelectedCell.Row - 1) or (ACell.Row = SelectedCell.Row + 1)) or
-    // Get bottom left/right neighbours...
-       (ACell.Column = SelectedCell.Column + 1) and ((ACell.Row = SelectedCell.Row - 1) or (ACell.Row = SelectedCell.Row + 1)) or
-    // Get top/bottom neighbours...
-       ((ACell.Column = SelectedCell.Column) and ((ACell.Row = pred(SelectedCell.Row)) or (ACell.Row = succ(SelectedCell.Row)))) or
-    // Get left/right neighbours...
-       ((ACell.Row = SelectedCell.Row) and ((ACell.Column = pred(SelectedCell.Column)) or (ACell.Column = succ(SelectedCell.Column)))) then
-       Result.Add(ACell);}
 
     if (Result.Count = 8) then
       break;
@@ -339,8 +326,6 @@ begin
   Canvas.Brush.Color := BackColor;
   Canvas.FillRect(Rect(0, 0, Width, Height));
 
-  //Canvas.Brush.Color := RGB(Random(255), Random(255), Random(255));
-
   for Index := 0 to pred(FCells.Count) do
   begin
     ACell := TGOLCell(FCells.Items[Index]);
@@ -388,19 +373,20 @@ begin
   if GameState <> golStarted then
     Exit;
 
-  // Copy current generation to the previous generation list...
+  // Assign current cells to the previous cells memory location...
   PreviousGenerationCells := FCells;
   try
+    // Create new cell list to represent the all new cells list...
     FCells := TGOLCellList.Create(True, FGridSettings);
     for Index := 0 to pred(PreviousGenerationCells.Count) do
     begin
       CurrentCell := TGOLCell.Clone(TGOLCell(PreviousGenerationCells.Items[Index]));
       CurrentCellNeighbours := PreviousGenerationCells.GetNeighboursForCell(CurrentCell, True);
       try
-        // If alive and under/overpopulated then die...
+        // If cell is alive and under/overpopulated then die...
         if (CurrentCell.Alive) and ((CurrentCellNeighbours.Count < 2) or (CurrentCellNeighbours.Count > 3)) then
           CurrentCell.Alive := False
-        // If dead and three live neighbours then reanimate...
+        // If cell is dead and three live neighbours then reanimate...
         else if not (CurrentCell.Alive) and (CurrentCellNeighbours.Count = 3) then
           CurrentCell.Alive := True;
       finally
