@@ -55,8 +55,6 @@ implementation
 
 {------------------------------------------------------------------------------}
 constructor TGOLMainForm.Create(AOwner: TComponent);
-var
-  Index: integer;
 begin
   inherited;
   FSettingsForm := nil;

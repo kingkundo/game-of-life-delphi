@@ -45,13 +45,15 @@ type
     FRow, FCol: integer;
     FRect: TRect;
     FAlive: boolean;
-    FColor: TColor;
+    FStandardColor: TColor;
+    FRandomColor: TColor;
   public
-    constructor Create(ARect: TRect; ACol: integer; ARow: integer; AColor: TColor = clRandom; AAlive: boolean = false);
+    constructor Create(ARect: TRect; ACol: integer; ARow: integer; AStandardColor: TColor = clRandom; ARandomColor: TColor = clRandom; AAlive: boolean = false);
     property Rect: TRect read FRect;
     property Row: integer read FRow;
     property Column: integer read FCol;
-    property Color: TColor read FColor write FColor;
+    property StandardColor: TColor read FStandardColor write FStandardColor;
+    property RandomColor: TColor read FRandomColor write FRandomColor;
     property Alive: boolean read FAlive write FAlive;
     class function Clone(ACell: TGOLCell): TGOLCell;
   end;
@@ -128,16 +130,21 @@ end;
 {-----------------------}
 
 {------------------------------------------------------------------------------}
-constructor TGOLCell.Create(ARect: TRect; ACol: integer; ARow: integer; AColor: TColor = clRandom; AAlive: boolean = false);
+constructor TGOLCell.Create(ARect: TRect; ACol: integer; ARow: integer; AStandardColor: TColor = clRandom; ARandomColor: TColor = clRandom; AAlive: boolean = false);
 begin
   FRect  := ARect;
   FCol   := ACol;
   FRow   := ARow;
 
-  if AColor = clRandom then
-    FColor := RGB(Random(255), Random(255), Random(255))
+  if ARandomColor = clRandom then
+    FRandomColor := RGB(Random(255), Random(255), Random(255))
   else
-    FColor := AColor;
+    FRandomColor := ARandomColor;
+
+  if AStandardColor = clRandom then
+    FStandardColor := FRandomColor
+  else
+    FStandardColor := AStandardColor;
 
   FAlive := AAlive;
 end;
@@ -145,7 +152,7 @@ end;
 {------------------------------------------------------------------------------}
 class function TGOLCell.Clone(ACell: TGOLCell): TGOLCell;
 begin
-  Result := TGOLCell.Create(ACell.Rect, ACell.Column, ACell.Row, ACell.Color, ACell.Alive);
+  Result := TGOLCell.Create(ACell.Rect, ACell.Column, ACell.Row, ACell.StandardColor, ACell.RandomColor, ACell.Alive);
 end;
 
 {-----------------------}
@@ -345,10 +352,12 @@ begin
   for Index := 0 to pred(FCells.Count) do
   begin
     ACell := TGOLCell(FCells.Items[Index]);
-    Canvas.Brush.Color := ACell.Color;
     if ACell.Alive then
     begin
-      Canvas.Brush.Color := ACell.Color;
+      if AliveCellColor = clRandom then
+        Canvas.Brush.Color := ACell.RandomColor
+      else
+        Canvas.Brush.Color := ACell.StandardColor;
       Canvas.FillRect(ACell.Rect);
     end;
   end;
@@ -369,7 +378,7 @@ begin
   if Button = mbLeft then
   begin
     FIsMouseDown := True;
-    MouseMove([], X, Y);
+    MouseMove(Shift, X, Y);
   end;
 end;
 

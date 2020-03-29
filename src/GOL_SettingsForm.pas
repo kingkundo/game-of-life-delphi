@@ -37,10 +37,11 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure chkAllowDrawDuringGameClick(Sender: TObject);
   private
+    FInitialising: boolean;
     FOnClose: TNotifyEvent;
     FGameOfLife: TGameOfLife;
   public
-    constructor Create(AOwner: TComponent; AGameOfLife: TGameOfLife; AOnClose: TNotifyEvent); overload;
+    constructor Create(AOwner: TComponent; AGameOfLife: TGameOfLife; AOnClose: TNotifyEvent); reintroduce;
   end;
 
 implementation
@@ -66,15 +67,14 @@ begin
     Exit;
   end;
 
+  FInitialising := True;
+
   cmbGenLengthSecs.Items.Add('0.05');
   for Index := 1 to 10 do
     cmbGenLengthSecs.Items.Add(FloatToStr(Index/10));
   for Index := 0 to pred(cmbGenLengthSecs.Items.Count) do
     if FloatToStr(FGameOfLife.GenerationLengthMillis / 1000) = cmbGenLengthSecs.Items[Index] then
-    begin
       cmbGenLengthSecs.ItemIndex := Index;
-      cmbGenLengthSecsChange(nil);
-    end;
 
   clrAlive.Selected := FGameOfLife.AliveCellColor;
   chkAliveCellColorRandom.Checked := FGameOfLife.AliveCellColor = clRandom;
@@ -82,7 +82,7 @@ begin
 
   chkAllowDrawDuringGame.Checked := FGameOfLife.AllowDrawDuringGame;
 
-  FGameOfLife.Invalidate;
+  FInitialising := False;
 end;
 
 {------------------------------------------------------------------------------}
@@ -96,18 +96,27 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGOLSettingsForm.cmbGenLengthSecsChange(Sender: TObject);
 begin
+  if FInitialising then
+    Exit;
+
   FGameOfLife.GenerationLengthMillis := floor(StrToFloat(cmbGenLengthSecs.Items[cmbGenLengthSecs.ItemIndex]) * 1000);
 end;
 
 {------------------------------------------------------------------------------}
 procedure TGOLSettingsForm.chkAliveCellColorRandomClick(Sender: TObject);
 begin
+  if FInitialising then
+    Exit;
+
   clrAliveChange(nil);
 end;
 
 {------------------------------------------------------------------------------}
 procedure TGOLSettingsForm.chkAllowDrawDuringGameClick(Sender: TObject);
 begin
+  if FInitialising then
+    Exit;
+
   FGameOfLife.AllowDrawDuringGame := chkAllowDrawDuringGame.Checked;
   FGameOfLife.Invalidate;
 end;
@@ -118,21 +127,28 @@ var
   Index: integer;
   Col: TColor;
 begin
+  if FInitialising then
+    Exit;
+
   if chkAliveCellColorRandom.Checked then
     Col := clRandom
   else
+  begin
     Col := clrAlive.Selected;
+    for Index := 0 to pred(FGameOfLife.Cells.Count) do
+      TGOLCell(FGameOfLife.Cells[Index]).StandardColor := Col;
+  end;
 
   FGameOfLife.AliveCellColor := Col;
-  for Index := 0 to pred(FGameOfLife.Cells.Count) do
-    TGOLCell(FGameOfLife.Cells[Index]).Color := Col;
-
   FGameOfLife.Invalidate;
 end;
 
 {------------------------------------------------------------------------------}
 procedure TGOLSettingsForm.clrDeadChange(Sender: TObject);
 begin
+  if FInitialising then
+    Exit;
+
   FGameOfLife.DeadCellColor := clrDead.Selected;
   FGameOfLife.Invalidate;
 end;
