@@ -12,5 +12,8 @@ Conway's Game of Life is a Turing complete zero-player game that follows the fol
   
 Every cell in the game has this ruleset applied to each generation of cells and that is the fundamentals of how the game works.
 
+# Usage
+This software is licensed with the GNU General Public License v3.0. This entitles you to basically do with it as you see fit, although credit should always be given with a link to this page so the code can be used by others further down the line.
+
 # More info
 For more information on the logic and history of Conway's Game of Life, visit the detailed wikipedia entry: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
