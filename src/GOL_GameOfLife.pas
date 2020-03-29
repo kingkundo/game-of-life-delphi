@@ -21,8 +21,6 @@ uses
 
 const
   clRandom = $030303;
-  CellColor = clRandom;
-  BackColor = clBlack;
 
   StopGameIfAllDead = False;
 
@@ -49,7 +47,7 @@ type
     FAlive: boolean;
     FColor: TColor;
   public
-    constructor Create(ARect: TRect; ACol: integer; ARow: integer; AColor: TColor =  CellColor; AAlive: boolean = false);
+    constructor Create(ARect: TRect; ACol: integer; ARow: integer; AColor: TColor = clRandom; AAlive: boolean = false);
     property Rect: TRect read FRect;
     property Row: integer read FRow;
     property Column: integer read FCol;
@@ -71,6 +69,8 @@ type
   TGameOfLife = class(TPanel)
   private
     FGridSettings: TGOLGridSettings;
+    FMenuEnabled: boolean;
+    FDrawWhileGameActive: boolean;
     FGenerationCount: integer;
     FGenerationLengthMillis: integer;
     FGameState: TGOLGameState;
@@ -80,6 +80,7 @@ type
     FGameStopped: TNotifyEvent;
     FGenerationComplete: TGOLOnGenerationComplete;
     FIsMouseDown: boolean;
+    FAliveCellColor, FDeadCellColor: TColor;
     procedure OnGameTimer(Sender: TObject);
     procedure ChangeGameState(ANewState: TGOLGameState);
     procedure ChangeGenerationLengthMillis(ANewLength: integer);
@@ -96,7 +97,11 @@ type
     constructor Create(AOwner: TComponent; AOnGameStarted: TNotifyEvent = nil; AOnGameStopped: TNotifyEvent = nil); reintroduce;
     destructor Destroy; override;
     procedure Reset;
+    property Cells: TGOLCellList read FCells;
+    property AliveCellColor: TColor read FAliveCellColor write FAliveCellColor;
+    property DeadCellColor: TColor read FDeadCellColor write FDeadCellColor;
     property GenerationLengthMillis: integer read FGenerationLengthMillis write ChangeGenerationLengthMillis;
+    property AllowDrawDuringGame: boolean read FDrawWhileGameActive write FDrawWhileGameActive;
     property GameState: TGOLGameState read FGameState write ChangeGameState;
     property ColumnCount: integer write SetColumnCount;
     property RowCount: integer write SetRowCount;
@@ -123,7 +128,7 @@ end;
 {-----------------------}
 
 {------------------------------------------------------------------------------}
-constructor TGOLCell.Create(ARect: TRect; ACol: integer; ARow: integer; AColor: TColor = CellColor; AAlive: boolean = false);
+constructor TGOLCell.Create(ARect: TRect; ACol: integer; ARow: integer; AColor: TColor = clRandom; AAlive: boolean = false);
 begin
   FRect  := ARect;
   FCol   := ACol;
@@ -144,7 +149,7 @@ begin
 end;
 
 {-----------------------}
-{ TGOLCELLList          }
+{ TGOLCellList          }
 {-----------------------}
 
 {------------------------------------------------------------------------------}
@@ -256,7 +261,12 @@ end;
 constructor TGameOfLife.Create(AOwner: TComponent; AOnGameStarted: TNotifyEvent = nil; AOnGameStopped: TNotifyEvent = nil);
 begin
   inherited Create(AOwner);
-  FIsMouseDown := False;
+  FDrawWhileGameActive := False;
+  FIsMouseDown         := False;
+  FMenuEnabled         := True;
+  FAliveCellColor      := clRandom;
+  FDeadCellColor       := clBlack;
+
   DoubleBuffered := True;
   ParentBackground := False;
 
@@ -270,7 +280,7 @@ begin
   FGameTimer := TTimer.Create(Self);
   FGameTimer.Enabled := True;
   FGameTimer.OnTimer := OnGameTimer;
-  GenerationLengthMillis := 1000;
+  GenerationLengthMillis := 50;
 end;
 
 {------------------------------------------------------------------------------}
@@ -311,14 +321,14 @@ end;
 procedure TGameOfLife.SetColumnCount(AColCount: integer);
 begin
   FGridSettings.ColumnCount := AColCount;
-  InitialiseCells;
+  Reset;
 end;
 
 {------------------------------------------------------------------------------}
 procedure TGameOfLife.SetRowCount(ARowCount: integer);
 begin
   FGridSettings.RowCount := ARowCount;
-  InitialiseCells;
+  Reset;
 end;
 
 {------------------------------------------------------------------------------}
@@ -329,7 +339,7 @@ var
 begin
   inherited;
   Canvas.Brush.Style := bsSolid;
-  Canvas.Brush.Color := BackColor;
+  Canvas.Brush.Color := DeadCellColor;
   Canvas.FillRect(Rect(0, 0, Width, Height));
 
   for Index := 0 to pred(FCells.Count) do
@@ -349,22 +359,26 @@ procedure TGameOfLife.Resize;
 begin
   inherited;
   GameState := gsStopped;
-  InitialiseCells;
+  Reset;
 end;
 
 {------------------------------------------------------------------------------}
 procedure TGameOfLife.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
-  FIsMouseDown := True;
-  MouseMove([], X, Y);
+  if Button = mbLeft then
+  begin
+    FIsMouseDown := True;
+    MouseMove([], X, Y);
+  end;
 end;
 
 {------------------------------------------------------------------------------}
 procedure TGameOfLife.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
-  FIsMouseDown := False;
+  if Button = mbLeft then
+    FIsMouseDown := False;
 end;
 
 {------------------------------------------------------------------------------}
@@ -373,7 +387,7 @@ var
   SelectedCell: TGOLCell;
 begin
   inherited;
-  if (not FIsMouseDown) or (GameState <> gsStopped) then
+  if (not FIsMouseDown) or ((not FDrawWhileGameActive) and (GameState <> gsStopped)) then
     Exit;
 
   SelectedCell := FCells.GetCellAtPoint(Point(X, Y));
@@ -453,7 +467,7 @@ begin
       ATop    := CellHeight * ColIndex;
       ARight  := ALeft + CellWidth;
       ABottom := ATop + CellHeight;
-      ACell   := TGOLCell.Create(Rect(ALeft, ATop, ARight, ABottom), ColIndex, RowIndex, CellColor);
+      ACell   := TGOLCell.Create(Rect(ALeft, ATop, ARight, ABottom), ColIndex, RowIndex, AliveCellColor);
       FCells.Add(ACell);
     end;
   end;

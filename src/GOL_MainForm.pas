@@ -18,25 +18,26 @@ uses
   Forms,
   ExtCtrls,
   StdCtrls,
-  GOL_GameOfLife;
+  GOL_GameOfLife,
+  GOL_SettingsForm;
 
 type
   TGOLMainForm = class(TForm)
     pnlControls: TPanel;
     btnStart: TButton;
     btnStop: TButton;
-    pnlOptions: TPanel;
     pnlStatus: TPanel;
     lblGameStatus: TLabel;
-    lblGenLength: TLabel;
-    cmbGenLengthSecs: TComboBox;
     btnClear: TButton;
+    btnOptions: TButton;
     procedure btnStartClick(Sender: TObject);
     procedure btnStopClick(Sender: TObject);
-    procedure cmbGenLengthSecsChange(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
+    procedure btnOptionsClick(Sender: TObject);
   private
     FGameOfLife: TGameOfLife;
+    FSettingsForm: TGOLSettingsForm;
+    procedure OnSettingsClose(Sender: TObject);
     procedure OnGameStarted(Sender: TObject);
     procedure OnGameStopped(Sender: TObject);
     procedure OnGenerationComplete(Sender: TObject; GenerationCount: integer);
@@ -58,6 +59,7 @@ var
   Index: integer;
 begin
   inherited;
+  FSettingsForm := nil;
 
   FGameOfLife := TGameOfLife.Create(Self);
   FGameOfLife.OnGameStarted := OnGameStarted;
@@ -67,12 +69,6 @@ begin
   FGameOfLife.Align := alClient;
   FGameOfLife.GameState := gsStopped;
 
-  //cmbGenLengthSecs.Items.Add('0.05');
-  for Index := 1 to 10 do
-    cmbGenLengthSecs.Items.Add(FloatToStr(Index/10));
-  cmbGenLengthSecs.ItemIndex := 0;
-  cmbGenLengthSecsChange(nil);
-
   //FGameOfLife.ColumnCount := 50;
   //FGameOfLife.RowCount := 50;
 end;
@@ -81,6 +77,8 @@ end;
 destructor TGOLMainForm.Destroy;
 begin
   FGameOfLife.Free;
+  if FSettingsForm <> nil then
+    FSettingsForm.Free;
   inherited;
 end;
 
@@ -103,9 +101,18 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-procedure TGOLMainForm.cmbGenLengthSecsChange(Sender: TObject);
+procedure TGOLMainForm.btnOptionsClick(Sender: TObject);
 begin
-  FGameOfLife.GenerationLengthMillis := floor(StrToFloat(cmbGenLengthSecs.Items[cmbGenLengthSecs.ItemIndex]) * 1000);
+  FSettingsForm := TGOLSettingsForm.Create(Self, FGameOfLife, OnSettingsClose);
+  FSettingsForm.Show;
+  btnOptions.Enabled := False;
+end;
+
+{------------------------------------------------------------------------------}
+procedure TGOLMainForm.OnSettingsClose(Sender: TObject);
+begin
+  FSettingsForm := nil;
+  btnOptions.Enabled := True;
 end;
 
 {------------------------------------------------------------------------------}

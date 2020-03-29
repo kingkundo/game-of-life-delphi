@@ -52,9 +52,9 @@
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
         <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
         <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
-        <Custom_Styles>&quot;Metropolis UI Dark|VCLSTYLE|$(BDSCOMMONDIR)\Styles\MetropolisUIDark.vsf&quot;</Custom_Styles>
         <SanitizedProjectName>GameOfLife</SanitizedProjectName>
         <VerInfo_Locale>2057</VerInfo_Locale>
+        <Custom_Styles>&quot;Metropolis UI Dark|VCLSTYLE|$(BDSCOMMONDIR)\Styles\MetropolisUIDark.vsf&quot;</Custom_Styles>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
@@ -102,6 +102,9 @@
             <Form>MainForm</Form>
         </DCCReference>
         <DCCReference Include="GOL_GameOfLife.pas"/>
+        <DCCReference Include="GOL_SettingsForm.pas">
+            <Form>Form1</Form>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -128,7 +131,7 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="Win32\Debug\GameOfLife.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\bin\Win32\Debug\GameOfLife.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>GameOfLife.exe</RemoteName>
                         <Overwrite>true</Overwrite>
