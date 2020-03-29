@@ -65,7 +65,7 @@ begin
   FGameOfLife.OnGenerationComplete := OnGenerationComplete;
   FGameOfLife.Parent := Self;
   FGameOfLife.Align := alClient;
-  FGameOfLife.GameState := golStopped;
+  FGameOfLife.GameState := gsStopped;
 
   cmbGenLengthSecs.Items.Add('0.05');
   for Index := 1 to 10 do
@@ -87,13 +87,13 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGOLMainForm.btnStartClick(Sender: TObject);
 begin
-  FGameOfLife.GameState := golStarted;
+  FGameOfLife.GameState := gsStarted;
 end;
 
 {------------------------------------------------------------------------------}
 procedure TGOLMainForm.btnStopClick(Sender: TObject);
 begin
-  FGameOfLife.GameState := golStopped;
+  FGameOfLife.GameState := gsStopped;
 end;
 
 {------------------------------------------------------------------------------}

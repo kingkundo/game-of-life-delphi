@@ -24,11 +24,13 @@ const
   CellColor = clRandom;
   BackColor = clBlack;
 
+  StopGameIfAllDead = False;
+
   DefaultColumnCount = 30;
   DefaultRowCount    = 30;
 
 type
-  TGOLGameState = (golStopped, golStarted);
+  TGOLGameState = (gsStopped, gsStarted);
   TGOLOnGenerationComplete = procedure(Sender: TObject; GenerationCount: integer) of object;
 
   TGOLGridSettings = class
@@ -77,6 +79,7 @@ type
     FGameStarted: TNotifyEvent;
     FGameStopped: TNotifyEvent;
     FGenerationComplete: TGOLOnGenerationComplete;
+    FIsMouseDown: boolean;
     procedure OnGameTimer(Sender: TObject);
     procedure ChangeGameState(ANewState: TGOLGameState);
     procedure ChangeGenerationLengthMillis(ANewLength: integer);
@@ -86,7 +89,9 @@ type
   protected
     procedure Paint; override;
     procedure Resize; override;
-    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
   public
     constructor Create(AOwner: TComponent; AOnGameStarted: TNotifyEvent = nil; AOnGameStopped: TNotifyEvent = nil); reintroduce;
     destructor Destroy; override;
@@ -251,6 +256,7 @@ end;
 constructor TGameOfLife.Create(AOwner: TComponent; AOnGameStarted: TNotifyEvent = nil; AOnGameStopped: TNotifyEvent = nil);
 begin
   inherited Create(AOwner);
+  FIsMouseDown := False;
   DoubleBuffered := True;
   ParentBackground := False;
 
@@ -258,7 +264,7 @@ begin
   OnGameStopped := AOnGameStopped;
 
   FGridSettings := TGOLGridSettings.Create(DefaultColumnCount, DefaultRowCount);
-  GameState  := golStopped;
+  GameState  := gsStopped;
 
   FCells     := TGOLCellList.Create(True, FGridSettings);
   FGameTimer := TTimer.Create(Self);
@@ -289,8 +295,8 @@ begin
   FGenerationCount := 0;
 
   case FGameState of
-    golStopped: if Assigned(FGameStopped) then FGameStopped(Self);
-    golStarted: if Assigned(FGameStarted) then FGameStarted(Self);
+    gsStopped: if Assigned(FGameStopped) then FGameStopped(Self);
+    gsStarted: if Assigned(FGameStarted) then FGameStarted(Self);
   end;
 end;
 
@@ -342,17 +348,32 @@ end;
 procedure TGameOfLife.Resize;
 begin
   inherited;
-  GameState := golStopped;
+  GameState := gsStopped;
   InitialiseCells;
 end;
 
 {------------------------------------------------------------------------------}
-procedure TGameOfLife.MouseDown(Button: TMouseButton; Shift: TShiftState; X,Y: Integer);
+procedure TGameOfLife.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  inherited;
+  FIsMouseDown := True;
+  MouseMove([], X, Y);
+end;
+
+{------------------------------------------------------------------------------}
+procedure TGameOfLife.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  inherited;
+  FIsMouseDown := False;
+end;
+
+{------------------------------------------------------------------------------}
+procedure TGameOfLife.MouseMove(Shift: TShiftState; X, Y: Integer);
 var
   SelectedCell: TGOLCell;
 begin
   inherited;
-  if GameState <> golStopped then
+  if (not FIsMouseDown) or (GameState <> gsStopped) then
     Exit;
 
   SelectedCell := FCells.GetCellAtPoint(Point(X, Y));
@@ -367,12 +388,14 @@ end;
 procedure TGameOfLife.OnGameTimer(Sender: TObject);
 var
   Index: integer;
+  AllCellsDead: boolean;
   CurrentCell: TGOLCell;
   PreviousGenerationCells, CurrentCellNeighbours: TGOLCellList;
 begin
-  if GameState <> golStarted then
+  if GameState <> gsStarted then
     Exit;
 
+  AllCellsDead := True;
   // Assign current cells to the previous cells memory location...
   PreviousGenerationCells := FCells;
   try
@@ -389,6 +412,9 @@ begin
         // If cell is dead and three live neighbours then reanimate...
         else if not (CurrentCell.Alive) and (CurrentCellNeighbours.Count = 3) then
           CurrentCell.Alive := True;
+
+        if CurrentCell.Alive then
+          AllCellsDead := False;
       finally
         CurrentCellNeighbours.Free;
         FCells.Add(CurrentCell);
@@ -402,6 +428,8 @@ begin
   Invalidate;
   if Assigned(FGenerationComplete) then
     FGenerationComplete(Self, FGenerationCount);
+  if StopGameIfAllDead and AllCellsDead then
+    GameState := gsStopped;
 end;
 
 {------------------------------------------------------------------------------}
@@ -411,7 +439,7 @@ var
   ALeft, ATop, ARight, ABottom: integer;
   RowIndex, ColIndex, CellWidth, CellHeight: integer;
 begin
-  GameState := golStopped;
+  GameState := gsStopped;
 
   CellWidth  := floor(Width / FGridSettings.RowCount);
   CellHeight := floor(Height / FGridSettings.ColumnCount);
