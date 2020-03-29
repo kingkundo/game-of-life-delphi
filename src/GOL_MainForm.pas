@@ -67,7 +67,7 @@ begin
   FGameOfLife.Align := alClient;
   FGameOfLife.GameState := gsStopped;
 
-  cmbGenLengthSecs.Items.Add('0.05');
+  //cmbGenLengthSecs.Items.Add('0.05');
   for Index := 1 to 10 do
     cmbGenLengthSecs.Items.Add(FloatToStr(Index/10));
   cmbGenLengthSecs.ItemIndex := 0;
