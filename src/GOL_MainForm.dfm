@@ -24,7 +24,6 @@ object GOLMainForm: TGOLMainForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitHeight = 840
   end
   object pnlControls: TPanel
     Left = 0
@@ -43,8 +42,6 @@ object GOLMainForm: TGOLMainForm
       Caption = 'Stop game'
       TabOrder = 0
       OnClick = btnStopClick
-      ExplicitLeft = 934
-      ExplicitHeight = 61
     end
     object btnStart: TButton
       Left = 534
@@ -55,25 +52,23 @@ object GOLMainForm: TGOLMainForm
       Caption = 'Start game'
       TabOrder = 1
       OnClick = btnStartClick
-      ExplicitLeft = 734
-      ExplicitHeight = 61
     end
     object pnlStatus: TPanel
       Left = 0
       Top = 0
-      Width = 409
+      Width = 534
       Height = 69
-      Align = alLeft
+      Align = alClient
       BevelOuter = bvNone
       DoubleBuffered = True
       ParentDoubleBuffered = False
       TabOrder = 2
-      ExplicitHeight = 61
+      ExplicitWidth = 409
       object lblGameStatus: TLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 403
+        Width = 528
         Height = 63
         Align = alClient
         Caption = 'Status'
@@ -92,8 +87,6 @@ object GOLMainForm: TGOLMainForm
       Caption = 'Clear cells'
       TabOrder = 3
       OnClick = btnClearClick
-      ExplicitLeft = 1134
-      ExplicitHeight = 61
     end
     object btnOptions: TButton
       Left = 1134
@@ -104,9 +97,6 @@ object GOLMainForm: TGOLMainForm
       Caption = 'Show Options'
       TabOrder = 4
       OnClick = btnOptionsClick
-      ExplicitLeft = 1158
-      ExplicitTop = 6
-      ExplicitHeight = 61
     end
   end
 end
