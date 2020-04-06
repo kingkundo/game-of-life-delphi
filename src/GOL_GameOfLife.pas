@@ -17,6 +17,7 @@ uses
   Contnrs,
   Graphics,
   Controls,
+  SysUtils,
   ExtCtrls;
 
 const
@@ -99,6 +100,8 @@ type
     constructor Create(AOwner: TComponent; AOnGameStarted: TNotifyEvent = nil; AOnGameStopped: TNotifyEvent = nil); reintroduce;
     destructor Destroy; override;
     procedure Reset;
+    function ImportBoard(NewBoard: string; PlayImmediately: boolean = False): boolean;
+    function ExportBoard: string;
     property Cells: TGOLCellList read FCells;
     property AliveCellColor: TColor read FAliveCellColor write FAliveCellColor;
     property DeadCellColor: TColor read FDeadCellColor write FDeadCellColor;
@@ -303,6 +306,73 @@ end;
 procedure TGameOfLife.Reset;
 begin
   InitialiseCells;
+end;
+
+{------------------------------------------------------------------------------}
+function TGameOfLife.ImportBoard(NewBoard: string; PlayImmediately: boolean = False): boolean;
+var
+  CurrentCell: TGOLCell;
+  Index, CurrentAlive: integer;
+  BoardComponents: TStringList;
+begin
+  Result := False;
+  GameState := gsStopped;
+
+  BoardComponents := TStringList.Create;
+  try
+    BoardComponents.Delimiter := ':';
+    BoardComponents.DelimitedText := NewBoard;
+
+    if BoardComponents.Count < 3 then
+      Exit;
+
+    ColumnCount := StrToIntDef(BoardComponents[0], DefaultColumnCount);
+    RowCount    := StrToIntDef(BoardComponents[1], DefaultRowCount);
+
+    for Index := 2 to pred(BoardComponents.Count) do
+    begin
+      if Index >= FCells.Count then
+        continue;
+
+      CurrentCell := TGOLCell(FCells[Index]);
+      CurrentAlive := StrToIntDef(BoardComponents[Index], 0);
+      if CurrentAlive = 1 then
+        CurrentCell.Alive := True
+      else
+        CurrentCell.Alive := False;
+    end;
+
+    Result := True;
+  finally
+    BoardComponents.Free;
+    Invalidate;
+  end;
+
+  if PlayImmediately then
+    GameState := gsStarted;
+end;
+
+{------------------------------------------------------------------------------}
+function TGameOfLife.ExportBoard: string;
+var
+  Cell: TGOLCell;
+  Index, Alive: integer;
+begin
+  Result := '';
+  if FGridSettings = nil then
+    Exit;
+
+  Result := format('%d:%d', [FGridSettings.ColumnCount, FGridSettings.RowCount]);
+  for Index := 0 to pred(FCells.Count) do
+  begin
+    Cell := TGOLCell(FCells[Index]);
+    if Cell.Alive then
+      Alive := 1
+    else
+      Alive := 0;
+
+    Result := format('%s:%d', [Result, Alive]);
+  end;
 end;
 
 {------------------------------------------------------------------------------}

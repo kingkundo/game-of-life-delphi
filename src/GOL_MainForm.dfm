@@ -63,7 +63,6 @@ object GOLMainForm: TGOLMainForm
       DoubleBuffered = True
       ParentDoubleBuffered = False
       TabOrder = 2
-      ExplicitWidth = 409
       object lblGameStatus: TLabel
         AlignWithMargins = True
         Left = 3

@@ -19,6 +19,7 @@ uses
   ExtCtrls,
   StdCtrls,
   GOL_GameOfLife,
+  GOL_ExampleStructures,
   GOL_SettingsForm;
 
 type
@@ -82,6 +83,8 @@ end;
 
 {------------------------------------------------------------------------------}
 procedure TGOLMainForm.btnStartClick(Sender: TObject);
+var
+  TestBoard: string;
 begin
   FGameOfLife.GameState := gsStarted;
 end;
