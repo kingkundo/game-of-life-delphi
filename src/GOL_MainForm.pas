@@ -83,8 +83,6 @@ end;
 
 {------------------------------------------------------------------------------}
 procedure TGOLMainForm.btnStartClick(Sender: TObject);
-var
-  TestBoard: string;
 begin
   FGameOfLife.GameState := gsStarted;
 end;

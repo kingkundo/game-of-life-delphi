@@ -348,7 +348,7 @@ begin
     Invalidate;
   end;
 
-  if PlayImmediately then
+  if Result and PlayImmediately then
     GameState := gsStarted;
 end;
 
