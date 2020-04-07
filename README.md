@@ -1,6 +1,8 @@
 # Conway's Game of Life -- in Delphi!
 A recreation of the classic Conway's Game Of Life written in Object Pascal with the Delphi VCL. The entire project should be compatible with most versions of the Delphi IDE from the latest RAD Studio down to past Delphi 7.
 
+![Game of Life screenshot](/etc/screen.jpg)
+
 # Rules
 Conway's Game of Life is a Turing complete zero-player game that follows the following ruleset:
   - Any live cell with fewer than two live neighbours dies, as if by underpopulation.
