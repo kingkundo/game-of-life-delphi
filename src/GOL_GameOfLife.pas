@@ -80,7 +80,7 @@ begin
   FGameTimer := TTimer.Create(Self);
   FGameTimer.Enabled := True;
   FGameTimer.OnTimer := OnGameTimer;
-  GenerationLengthMillis := 50;
+  GenerationLengthMillis := 100;
 end;
 
 {------------------------------------------------------------------------------}

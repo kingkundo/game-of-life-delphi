@@ -82,7 +82,6 @@ end;
 procedure TGOLMainForm.btnStartClick(Sender: TObject);
 begin
   //FGameOfLife.ImportState(GOPHER_EXAMPLE, true);
-  //FGameOfLife.Config.IsInfinite := False;
   FGameOfLife.GameState := gsStarted;
 end;
 
