@@ -3,8 +3,8 @@ object GOLMainForm: TGOLMainForm
   Top = 0
   BorderStyle = bsSingle
   Caption = 'Game of Life'
-  ClientHeight = 884
-  ClientWidth = 1367
+  ClientHeight = 870
+  ClientWidth = 1310
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,17 +19,19 @@ object GOLMainForm: TGOLMainForm
   object pnlGame: TPanel
     Left = 0
     Top = 0
-    Width = 1367
-    Height = 815
+    Width = 1310
+    Height = 801
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
     ExplicitTop = -3
+    ExplicitWidth = 1367
+    ExplicitHeight = 815
   end
   object pnlControls: TPanel
     Left = 0
-    Top = 815
-    Width = 1367
+    Top = 801
+    Width = 1310
     Height = 69
     Align = alBottom
     BevelOuter = bvNone
@@ -37,7 +39,7 @@ object GOLMainForm: TGOLMainForm
     ExplicitTop = 832
     ExplicitWidth = 1334
     object btnStop: TButton
-      Left = 767
+      Left = 710
       Top = 0
       Width = 200
       Height = 69
@@ -48,7 +50,7 @@ object GOLMainForm: TGOLMainForm
       ExplicitLeft = 734
     end
     object btnStart: TButton
-      Left = 567
+      Left = 510
       Top = 0
       Width = 200
       Height = 69
@@ -61,7 +63,7 @@ object GOLMainForm: TGOLMainForm
     object pnlStatus: TPanel
       Left = 0
       Top = 0
-      Width = 567
+      Width = 510
       Height = 69
       Align = alClient
       BevelOuter = bvNone
@@ -73,7 +75,7 @@ object GOLMainForm: TGOLMainForm
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 561
+        Width = 504
         Height = 63
         Align = alClient
         BevelInner = bvNone
@@ -87,7 +89,7 @@ object GOLMainForm: TGOLMainForm
       end
     end
     object btnClear: TButton
-      Left = 967
+      Left = 910
       Top = 0
       Width = 200
       Height = 69
@@ -98,7 +100,7 @@ object GOLMainForm: TGOLMainForm
       ExplicitLeft = 934
     end
     object btnOptions: TButton
-      Left = 1167
+      Left = 1110
       Top = 0
       Width = 200
       Height = 69
