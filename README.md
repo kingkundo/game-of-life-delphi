@@ -4,7 +4,7 @@ A recreation of the classic Conway's Game Of Life written in Object Pascal with 
 ![Game of Life screenshot](/etc/screen.jpg)
 
 # Dependencies
-This project requires that the TX Delphi Library is installed on your machine and locatable by the Delphi IDE as a library. This is because the grid that is used heavily in this project is contained within the TX library. You can find it [here](https://github.com/tomxxi/tx-delphi-lib)
+This project requires that the TX Delphi Library is installed on your machine and locatable by the Delphi IDE as a library. This is because the grid that is used heavily in this project is contained within the TX library. You can find it [here](https://github.com/tomxxi/tx-delphi-lib).
 
 # Rules
 Conway's Game of Life is a Turing complete zero-player game that follows the following ruleset:
