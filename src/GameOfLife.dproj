@@ -109,7 +109,9 @@
         <DCCReference Include="GOL_SettingsForm.pas">
             <Form>Form1</Form>
         </DCCReference>
-        <DCCReference Include="GOL_ExampleStructures.pas"/>
+        <DCCReference Include="GOL_ExampleStructures.pas">
+            <Form>$R *.res</Form>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
