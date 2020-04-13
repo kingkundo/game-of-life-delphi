@@ -183,17 +183,8 @@ begin
     for Index := 0 to pred(PreviousGenerationCells.Count) do
     begin
       CurrentCell := TXCell(PreviousGenerationCells.Items[Index]).Clone;
-      CurrentCellNeighbours := PreviousGenerationCells.GetNeighboursForCell(CurrentCell);
+      CurrentCellNeighbours := PreviousGenerationCells.GetNeighboursForCell(CurrentCell, True);
       try
-        // This code removes dead cells...
-        // TODO: Optimise this!
-        for DeadIndex := pred(CurrentCellNeighbours.Count) downto 0 do
-        begin
-          CurrentNeighbour := TXCell(CurrentCellNeighbours.Items[DeadIndex]);
-          if not CurrentNeighbour.Active then
-            CurrentCellNeighbours.Remove(CurrentNeighbour);
-        end;
-
         // If cell is alive and under/overpopulated then die...
         if (CurrentCell.Active) and ((CurrentCellNeighbours.Count < 2) or (CurrentCellNeighbours.Count > 3)) then
           CurrentCell.Active := False
