@@ -3,7 +3,7 @@ object GOLSettingsForm: TGOLSettingsForm
   Top = 0
   BorderStyle = bsDialog
   Caption = 'Settings'
-  ClientHeight = 268
+  ClientHeight = 303
   ClientWidth = 413
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -23,10 +23,11 @@ object GOLSettingsForm: TGOLSettingsForm
     Left = 0
     Top = 0
     Width = 413
-    Height = 222
+    Height = 257
     Align = alClient
     Caption = 'Game of Life settings'
     TabOrder = 0
+    ExplicitHeight = 222
     object lblGenLength: TLabel
       AlignWithMargins = True
       Left = 16
@@ -146,15 +147,31 @@ object GOLSettingsForm: TGOLSettingsForm
       TabOrder = 4
       OnClick = chkAllowDrawDuringGameClick
     end
+    object chkInfiniteGrid: TCheckBox
+      Left = 16
+      Top = 216
+      Width = 217
+      Height = 25
+      Caption = 'Simulate an infinite grid'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 5
+      OnClick = chkInfiniteGridClick
+    end
   end
   object pnlControls: TPanel
     Left = 0
-    Top = 222
+    Top = 257
     Width = 413
     Height = 46
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 222
     DesignSize = (
       413
       46)

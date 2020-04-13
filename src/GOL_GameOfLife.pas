@@ -14,6 +14,7 @@ uses
   TX_RetroGrid,
   Math,
   Windows,
+  Messages,
   Classes,
   Contnrs,
   Graphics,
@@ -48,8 +49,7 @@ type
   public
     constructor Create(AOwner: TComponent; AOnGameStarted: TNotifyEvent = nil; AOnGameStopped: TNotifyEvent = nil); reintroduce;
     destructor Destroy; override;
-    function ImportBoard(NewBoard: string; PlayImmediately: boolean = False): boolean; reintroduce;
-    function ExportBoard: string; reintroduce;
+    function ImportState(NewState: string; PlayImmediately: boolean = False): boolean; reintroduce;
     property GenerationLengthMillis: integer read FGenerationLengthMillis write ChangeGenerationLengthMillis;
     property AllowDrawDuringGame: boolean read FDrawWhileGameActive write FDrawWhileGameActive;
     property GameState: TGOLGameState read FGameState write ChangeGameState;
@@ -57,6 +57,7 @@ type
     property OnGameStopped: TNotifyEvent read FGameStopped write FGameStopped;
     property OnGenerationComplete: TGOLOnGenerationComplete read FGenerationComplete write FGenerationComplete;
   end;
+
 
 implementation
 
@@ -114,7 +115,7 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-function TGameOfLife.ImportBoard(NewBoard: string; PlayImmediately: boolean = False): boolean;
+function TGameOfLife.ImportState(NewState: string; PlayImmediately: boolean = False): boolean;
 var
   CurrentCell: TXCell;
   Index, CurrentAlive: integer;
@@ -123,33 +124,10 @@ begin
   Result := False;
   GameState := gsStopped;
 
-  inherited ImportBoard(NewBoard);
+  Result := inherited ImportState(NewState);
 
   if Result and PlayImmediately then
     GameState := gsStarted;
-end;
-
-{------------------------------------------------------------------------------}
-function TGameOfLife.ExportBoard: string;
-var
-  Cell: TXCell;
-  Index, Alive: integer;
-begin
-  Result := '';
-  if FGridConf = nil then
-    Exit;
-
-  Result := format('%d:%d', [FGridConf.ColumnCount, FGridConf.RowCount]);
-  for Index := 0 to pred(Cells.Count) do
-  begin
-    Cell := TXCell(Cells[Index]);
-    if Cell.Active then
-      Alive := 1
-    else
-      Alive := 0;
-
-    Result := format('%s:%d', [Result, Alive]);
-  end;
 end;
 
 {------------------------------------------------------------------------------}
@@ -187,7 +165,7 @@ begin
   PreviousGenerationCells := Cells;
   try
     // Create new cell list to represent the all new cells list...
-    Cells := TXCellList.Create(True, FGridConf);
+    Cells := TXCellList.Create(True, Config);
     for Index := 0 to pred(PreviousGenerationCells.Count) do
     begin
       CurrentCell := TXCell(PreviousGenerationCells.Items[Index]).Clone;

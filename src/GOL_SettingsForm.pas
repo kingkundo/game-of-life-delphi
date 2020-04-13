@@ -29,6 +29,7 @@ type
     pnlControls: TPanel;
     chkAliveCellColorRandom: TCheckBox;
     chkAllowDrawDuringGame: TCheckBox;
+    chkInfiniteGrid: TCheckBox;
     procedure btnCloseClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure cmbGenLengthSecsChange(Sender: TObject);
@@ -37,6 +38,7 @@ type
     procedure clrAliveChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure chkAllowDrawDuringGameClick(Sender: TObject);
+    procedure chkInfiniteGridClick(Sender: TObject);
   private
     FInitialising: boolean;
     FOnClose: TNotifyEvent;
@@ -77,11 +79,12 @@ begin
     if FloatToStr(FGameOfLife.GenerationLengthMillis / 1000) = cmbGenLengthSecs.Items[Index] then
       cmbGenLengthSecs.ItemIndex := Index;
 
-  clrAlive.Selected := FGameOfLife.DefaultActiveCellColor;
-  chkAliveCellColorRandom.Checked := FGameOfLife.DefaultActiveCellColor = clRandom;
-  clrDead.Selected := FGameOfLife.Config.Color;
+  clrAlive.Selected := FGameOfLife.Config.DefaultActiveCellColor;
+  chkAliveCellColorRandom.Checked := FGameOfLife.Config.DefaultActiveCellColor = clRandom;
+  clrDead.Selected := FGameOfLife.Config.BackColor;
 
   chkAllowDrawDuringGame.Checked := FGameOfLife.AllowDrawDuringGame;
+  chkInfiniteGrid.Checked := FGameOfLife.Config.Infinite;
 
   FInitialising := False;
 end;
@@ -123,6 +126,15 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
+procedure TGOLSettingsForm.chkInfiniteGridClick(Sender: TObject);
+begin
+  if FInitialising then
+    Exit;
+
+  FGameOfLife.Config.Infinite := chkInfiniteGrid.Checked;
+end;
+
+{------------------------------------------------------------------------------}
 procedure TGOLSettingsForm.clrAliveChange(Sender: TObject);
 var
   Index: integer;
@@ -136,8 +148,7 @@ begin
   else
     Col := clrAlive.Selected;
 
-  FGameOfLife.DefaultActiveCellColor := Col;
-  FGameOfLife.Invalidate;
+  FGameOfLife.Config.DefaultActiveCellColor := Col;
 end;
 
 {------------------------------------------------------------------------------}
@@ -146,8 +157,7 @@ begin
   if FInitialising then
     Exit;
 
-  FGameOfLife.Config.Color := clrDead.Selected;
-  FGameOfLife.Invalidate;
+  FGameOfLife.Config.BackColor := clrDead.Selected;
 end;
 
 {------------------------------------------------------------------------------}

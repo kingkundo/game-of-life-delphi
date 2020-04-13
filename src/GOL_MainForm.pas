@@ -28,9 +28,9 @@ type
     btnStart: TButton;
     btnStop: TButton;
     pnlStatus: TPanel;
-    lblGameStatus: TLabel;
     btnClear: TButton;
     btnOptions: TButton;
+    lblGameStatus: TStaticText;
     procedure btnStartClick(Sender: TObject);
     procedure btnStopClick(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
@@ -84,7 +84,7 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGOLMainForm.btnStartClick(Sender: TObject);
 begin
-  //FGameOfLife.ImportBoard(WALKERS_EXAMPLE_30X30, true);
+  //FGameOfLife.ImportState(WALKERS_EXAMPLE_30X30, true);
   //FGameOfLife.Config.IsInfinite := False;
   FGameOfLife.GameState := gsStarted;
 end;

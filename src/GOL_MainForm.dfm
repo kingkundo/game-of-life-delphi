@@ -3,8 +3,8 @@ object GOLMainForm: TGOLMainForm
   Top = 0
   BorderStyle = bsSingle
   Caption = 'Game of Life'
-  ClientHeight = 901
-  ClientWidth = 1334
+  ClientHeight = 884
+  ClientWidth = 1367
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,22 +19,25 @@ object GOLMainForm: TGOLMainForm
   object pnlGame: TPanel
     Left = 0
     Top = 0
-    Width = 1334
-    Height = 832
+    Width = 1367
+    Height = 815
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = -3
   end
   object pnlControls: TPanel
     Left = 0
-    Top = 832
-    Width = 1334
+    Top = 815
+    Width = 1367
     Height = 69
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 832
+    ExplicitWidth = 1334
     object btnStop: TButton
-      Left = 734
+      Left = 767
       Top = 0
       Width = 200
       Height = 69
@@ -42,9 +45,10 @@ object GOLMainForm: TGOLMainForm
       Caption = 'Stop game'
       TabOrder = 0
       OnClick = btnStopClick
+      ExplicitLeft = 734
     end
     object btnStart: TButton
-      Left = 534
+      Left = 567
       Top = 0
       Width = 200
       Height = 69
@@ -52,33 +56,38 @@ object GOLMainForm: TGOLMainForm
       Caption = 'Start game'
       TabOrder = 1
       OnClick = btnStartClick
+      ExplicitLeft = 534
     end
     object pnlStatus: TPanel
       Left = 0
       Top = 0
-      Width = 534
+      Width = 567
       Height = 69
       Align = alClient
       BevelOuter = bvNone
       DoubleBuffered = True
       ParentDoubleBuffered = False
       TabOrder = 2
-      object lblGameStatus: TLabel
+      ExplicitWidth = 534
+      object lblGameStatus: TStaticText
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 528
+        Width = 561
         Height = 63
         Align = alClient
+        BevelInner = bvNone
+        BevelOuter = bvNone
         Caption = 'Status'
-        Layout = tlCenter
-        WordWrap = True
-        ExplicitWidth = 50
-        ExplicitHeight = 25
+        TabOrder = 0
+        ExplicitLeft = 8
+        ExplicitTop = 26
+        ExplicitWidth = 625
+        ExplicitHeight = 32
       end
     end
     object btnClear: TButton
-      Left = 934
+      Left = 967
       Top = 0
       Width = 200
       Height = 69
@@ -86,9 +95,10 @@ object GOLMainForm: TGOLMainForm
       Caption = 'Clear cells'
       TabOrder = 3
       OnClick = btnClearClick
+      ExplicitLeft = 934
     end
     object btnOptions: TButton
-      Left = 1134
+      Left = 1167
       Top = 0
       Width = 200
       Height = 69
@@ -96,6 +106,7 @@ object GOLMainForm: TGOLMainForm
       Caption = 'Show Options'
       TabOrder = 4
       OnClick = btnOptionsClick
+      ExplicitLeft = 1134
     end
   end
 end
