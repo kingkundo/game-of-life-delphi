@@ -13,6 +13,7 @@ uses
   Dialogs,
   ExtCtrls,
   StdCtrls,
+  TX_RetroGrid,
   GOL_GameOfLife;
 
 type
@@ -76,9 +77,9 @@ begin
     if FloatToStr(FGameOfLife.GenerationLengthMillis / 1000) = cmbGenLengthSecs.Items[Index] then
       cmbGenLengthSecs.ItemIndex := Index;
 
-  clrAlive.Selected := FGameOfLife.AliveCellColor;
-  chkAliveCellColorRandom.Checked := FGameOfLife.AliveCellColor = clRandom;
-  clrDead.Selected := FGameOfLife.DeadCellColor;
+  clrAlive.Selected := FGameOfLife.DefaultActiveCellColor;
+  chkAliveCellColorRandom.Checked := FGameOfLife.DefaultActiveCellColor = clRandom;
+  clrDead.Selected := FGameOfLife.Config.Color;
 
   chkAllowDrawDuringGame.Checked := FGameOfLife.AllowDrawDuringGame;
 
@@ -133,13 +134,9 @@ begin
   if chkAliveCellColorRandom.Checked then
     Col := clRandom
   else
-  begin
     Col := clrAlive.Selected;
-    for Index := 0 to pred(FGameOfLife.Cells.Count) do
-      TGOLCell(FGameOfLife.Cells[Index]).StandardColor := Col;
-  end;
 
-  FGameOfLife.AliveCellColor := Col;
+  FGameOfLife.DefaultActiveCellColor := Col;
   FGameOfLife.Invalidate;
 end;
 
@@ -149,7 +146,7 @@ begin
   if FInitialising then
     Exit;
 
-  FGameOfLife.DeadCellColor := clrDead.Selected;
+  FGameOfLife.Config.Color := clrDead.Selected;
   FGameOfLife.Invalidate;
 end;
 

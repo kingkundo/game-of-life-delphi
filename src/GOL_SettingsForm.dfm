@@ -27,7 +27,6 @@ object GOLSettingsForm: TGOLSettingsForm
     Align = alClient
     Caption = 'Game of Life settings'
     TabOrder = 0
-    ExplicitHeight = 177
     object lblGenLength: TLabel
       AlignWithMargins = True
       Left = 16
@@ -156,7 +155,6 @@ object GOLSettingsForm: TGOLSettingsForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 177
     DesignSize = (
       413
       46)
