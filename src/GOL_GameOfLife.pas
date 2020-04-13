@@ -61,8 +61,6 @@ type
     property OnGenerationComplete: TGOLOnGenerationComplete read FGenerationComplete write FGenerationComplete;
   end;
 
-
-
 implementation
 
 {-----------------------}
@@ -209,5 +207,7 @@ begin
   if StopGameIfAllDead and AllCellsDead then
     GameState := gsStopped;
 end;
+
+{-}
 
 end.
