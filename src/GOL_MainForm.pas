@@ -36,6 +36,7 @@ type
     procedure btnClearClick(Sender: TObject);
     procedure btnOptionsClick(Sender: TObject);
   private
+    FPreviousGenerationNum: integer;
     FGameOfLife: TGameOfLife;
     FSettingsForm: TGOLSettingsForm;
     procedure OnSettingsClose(Sender: TObject);
@@ -61,11 +62,11 @@ begin
   FSettingsForm := nil;
 
   FGameOfLife := TGameOfLife.Create(Self);
+  FGameOfLife.Parent := Self;
+  FGameOfLife.Align := alClient;
   FGameOfLife.OnGameStarted := OnGameStarted;
   FGameOfLife.OnGameStopped := OnGameStopped;
   FGameOfLife.OnGenerationComplete := OnGenerationComplete;
-  FGameOfLife.Parent := Self;
-  FGameOfLife.Align := alClient;
   FGameOfLife.GameState := gsStopped;
 
   //FGameOfLife.ColumnCount := 50;

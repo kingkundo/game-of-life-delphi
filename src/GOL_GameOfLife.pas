@@ -23,7 +23,9 @@ uses
   ExtCtrls;
 
 const
-  StopGameIfAllDead = False;
+  StopGameIfAllDead     = False;
+  WM_GENERATIONCOMPLETE = WM_USER + 100;
+  WM_GAMESTATECHANGED   = WM_USER + 101;
 
 type
   TGOLGameState = (gsStopped, gsStarted);
@@ -44,6 +46,7 @@ type
     procedure ChangeGameState(ANewState: TGOLGameState);
     procedure ChangeGenerationLengthMillis(ANewLength: integer);
   protected
+    procedure WndProc(var Message: TMessage); override;
     procedure Resize; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
   public
@@ -59,6 +62,7 @@ type
   end;
 
 
+
 implementation
 
 {-----------------------}
@@ -72,10 +76,8 @@ begin
   FDrawWhileGameActive := False;
   FMenuEnabled         := True;
 
-  OnGameStarted := AOnGameStarted;
-  OnGameStopped := AOnGameStopped;
-
-  GameState  := gsStopped;
+  FGameStarted := AOnGameStarted;
+  FGameStopped := AOnGameStopped;
 
   FGameTimer := TTimer.Create(Self);
   FGameTimer.Enabled := True;
@@ -98,6 +100,25 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
+procedure TGameOfLife.WndProc(var Message: TMessage);
+begin
+  inherited;
+  case Message.Msg of
+    WM_GENERATIONCOMPLETE: begin
+                             if Assigned(FGenerationComplete) then
+                               FGenerationComplete(Self, FGenerationCount);
+                             Invalidate;
+                           end;
+    WM_GAMESTATECHANGED  : begin
+                             case Message.LParam of
+                               0: if Assigned(FGameStopped) then FGameStopped(Self);
+                               1: if Assigned(FGameStarted) then FGameStarted(Self);
+                             end;
+                           end;
+  end;
+end;
+
+{------------------------------------------------------------------------------}
 procedure TGameOfLife.MouseMove(Shift: TShiftState; X, Y: Integer);
 var
   SelectedCell: TXCell;
@@ -111,17 +132,14 @@ begin
     Exit;
 
   SelectedCell.Active := True;
-  Invalidate;
+
+  if GameState = gsStopped then
+    Invalidate;
 end;
 
 {------------------------------------------------------------------------------}
 function TGameOfLife.ImportState(NewState: string; PlayImmediately: boolean = False): boolean;
-var
-  CurrentCell: TXCell;
-  Index, CurrentAlive: integer;
-  BoardComponents: TStringList;
 begin
-  Result := False;
   GameState := gsStopped;
 
   Result := inherited ImportState(NewState);
@@ -135,11 +153,7 @@ procedure TGameOfLife.ChangeGameState(ANewState: TGOLGameState);
 begin
   FGameState := ANewState;
   FGenerationCount := 0;
-
-  case FGameState of
-    gsStopped: if Assigned(FGameStopped) then FGameStopped(Self);
-    gsStarted: if Assigned(FGameStarted) then FGameStarted(Self);
-  end;
+  PostMessage(Handle, WM_GAMESTATECHANGED, 0, ord(FGameState));
 end;
 
 {------------------------------------------------------------------------------}
@@ -199,9 +213,8 @@ begin
   end;
 
   Inc(FGenerationCount);
-  Invalidate;
-  if Assigned(FGenerationComplete) then
-    FGenerationComplete(Self, FGenerationCount);
+  PostMessage(Handle, WM_GENERATIONCOMPLETE, 0, 0);
+
   if StopGameIfAllDead and AllCellsDead then
     GameState := gsStopped;
 end;

@@ -137,7 +137,6 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGOLSettingsForm.clrAliveChange(Sender: TObject);
 var
-  Index: integer;
   Col: TColor;
 begin
   if FInitialising then
