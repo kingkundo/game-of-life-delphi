@@ -21,12 +21,13 @@ object GOLMainForm: TGOLMainForm
     Top = 0
     Width = 1310
     Height = 801
+    Margins.Left = 5
+    Margins.Top = 5
+    Margins.Right = 5
+    Margins.Bottom = 5
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = -3
-    ExplicitWidth = 1367
-    ExplicitHeight = 815
   end
   object pnlControls: TPanel
     Left = 0
@@ -36,8 +37,6 @@ object GOLMainForm: TGOLMainForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 832
-    ExplicitWidth = 1334
     object btnStop: TButton
       Left = 710
       Top = 0
@@ -47,7 +46,6 @@ object GOLMainForm: TGOLMainForm
       Caption = 'Stop game'
       TabOrder = 0
       OnClick = btnStopClick
-      ExplicitLeft = 734
     end
     object btnStart: TButton
       Left = 510
@@ -58,34 +56,34 @@ object GOLMainForm: TGOLMainForm
       Caption = 'Start game'
       TabOrder = 1
       OnClick = btnStartClick
-      ExplicitLeft = 534
     end
     object pnlStatus: TPanel
       Left = 0
       Top = 0
       Width = 510
       Height = 69
+      Margins.Left = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
       Align = alClient
       BevelOuter = bvNone
       DoubleBuffered = True
       ParentDoubleBuffered = False
       TabOrder = 2
-      ExplicitWidth = 534
-      object lblGameStatus: TStaticText
+      object lblGameStatus: TLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
         Width = 504
         Height = 63
         Align = alClient
-        BevelInner = bvNone
-        BevelOuter = bvNone
-        Caption = 'Status'
-        TabOrder = 0
-        ExplicitLeft = 8
-        ExplicitTop = 26
-        ExplicitWidth = 625
-        ExplicitHeight = 32
+        AutoSize = False
+        Caption = 'Game status'
+        Layout = tlCenter
+        ExplicitLeft = 144
+        ExplicitTop = 40
+        ExplicitWidth = 55
+        ExplicitHeight = 25
       end
     end
     object btnClear: TButton
@@ -97,7 +95,6 @@ object GOLMainForm: TGOLMainForm
       Caption = 'Clear cells'
       TabOrder = 3
       OnClick = btnClearClick
-      ExplicitLeft = 934
     end
     object btnOptions: TButton
       Left = 1110
@@ -108,7 +105,6 @@ object GOLMainForm: TGOLMainForm
       Caption = 'Show Options'
       TabOrder = 4
       OnClick = btnOptionsClick
-      ExplicitLeft = 1134
     end
   end
 end

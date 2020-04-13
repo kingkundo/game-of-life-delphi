@@ -30,7 +30,7 @@ type
     pnlStatus: TPanel;
     btnClear: TButton;
     btnOptions: TButton;
-    lblGameStatus: TStaticText;
+    lblGameStatus: TLabel;
     procedure btnStartClick(Sender: TObject);
     procedure btnStopClick(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
