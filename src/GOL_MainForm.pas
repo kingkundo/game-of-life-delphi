@@ -36,7 +36,6 @@ type
     procedure btnClearClick(Sender: TObject);
     procedure btnOptionsClick(Sender: TObject);
   private
-    FPreviousGenerationNum: integer;
     FGameOfLife: TGameOfLife;
     FSettingsForm: TGOLSettingsForm;
     procedure OnSettingsClose(Sender: TObject);
@@ -68,9 +67,6 @@ begin
   FGameOfLife.OnGameStopped := OnGameStopped;
   FGameOfLife.OnGenerationComplete := OnGenerationComplete;
   FGameOfLife.GameState := gsStopped;
-
-  //FGameOfLife.ColumnCount := 50;
-  //FGameOfLife.RowCount := 50;
 end;
 
 {------------------------------------------------------------------------------}
@@ -85,7 +81,7 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGOLMainForm.btnStartClick(Sender: TObject);
 begin
-  //FGameOfLife.ImportState(WALKERS_EXAMPLE_30X30, true);
+  //FGameOfLife.ImportState(GOPHER_EXAMPLE, true);
   //FGameOfLife.Config.IsInfinite := False;
   FGameOfLife.GameState := gsStarted;
 end;
