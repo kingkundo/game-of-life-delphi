@@ -20,7 +20,6 @@ begin
     Application.MainFormOnTaskbar := True;
     TStyleManager.TrySetStyle('Metropolis UI Dark');
   {$IFEND}
-  TStyleManager.TrySetStyle('Metropolis UI Dark');
   Application.Title := 'Game of Life';
   Application.CreateForm(TGOLMainForm, MainForm);
   Application.Run;

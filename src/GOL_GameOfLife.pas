@@ -164,9 +164,9 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGameOfLife.OnGameTimer(Sender: TObject);
 var
-  Index, DeadIndex: integer;
+  Index: integer;
   AllCellsDead: boolean;
-  CurrentCell, CurrentNeighbour: TXCell;
+  CurrentCell: TXCell;
   PreviousGenerationCells, CurrentCellNeighbours: TXCellList;
 begin
   if GameState <> gsStarted then

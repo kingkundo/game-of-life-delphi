@@ -81,7 +81,7 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGOLMainForm.btnStartClick(Sender: TObject);
 begin
-  //FGameOfLife.ImportState(GOPHER_EXAMPLE, true);
+  //FGameOfLife.ImportState(COOL_EXPLODER, true);
   FGameOfLife.GameState := gsStarted;
 end;
 
