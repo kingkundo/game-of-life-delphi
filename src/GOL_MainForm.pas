@@ -67,6 +67,8 @@ begin
   FGameOfLife.OnGameStopped := OnGameStopped;
   FGameOfLife.OnGenerationComplete := OnGenerationComplete;
   FGameOfLife.GameState := gsStopped;
+
+  FGameOfLife.Reset;
 end;
 
 {------------------------------------------------------------------------------}

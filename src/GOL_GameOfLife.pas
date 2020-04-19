@@ -181,7 +181,7 @@ begin
     for Index := 0 to pred(PreviousGenerationCells.Count) do
     begin
       CurrentCell := TXCell(PreviousGenerationCells.Items[Index]).Clone;
-      CurrentCellNeighbours := PreviousGenerationCells.GetNeighboursForCell(CurrentCell, True);
+      CurrentCellNeighbours := PreviousGenerationCells.GetNeighboursForCell(CurrentCell, True, True);
       try
         // If cell is alive and under/overpopulated then die...
         if (CurrentCell.Active) and ((CurrentCellNeighbours.Count < 2) or (CurrentCellNeighbours.Count > 3)) then
