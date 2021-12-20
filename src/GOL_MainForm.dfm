@@ -1,10 +1,9 @@
 object GOLMainForm: TGOLMainForm
   Left = 0
   Top = 0
-  BorderStyle = bsSingle
   Caption = 'Game of Life'
-  ClientHeight = 870
-  ClientWidth = 1310
+  ClientHeight = 860
+  ClientWidth = 1300
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,8 +18,8 @@ object GOLMainForm: TGOLMainForm
   object pnlGame: TPanel
     Left = 0
     Top = 0
-    Width = 1310
-    Height = 801
+    Width = 1300
+    Height = 791
     Margins.Left = 5
     Margins.Top = 5
     Margins.Right = 5
@@ -31,14 +30,16 @@ object GOLMainForm: TGOLMainForm
   end
   object pnlControls: TPanel
     Left = 0
-    Top = 801
-    Width = 1310
+    Top = 791
+    Width = 1300
     Height = 69
     Align = alBottom
     BevelOuter = bvNone
+    DoubleBuffered = True
+    ParentDoubleBuffered = False
     TabOrder = 1
     object btnStop: TButton
-      Left = 710
+      Left = 700
       Top = 0
       Width = 200
       Height = 69
@@ -48,7 +49,7 @@ object GOLMainForm: TGOLMainForm
       OnClick = btnStopClick
     end
     object btnStart: TButton
-      Left = 510
+      Left = 500
       Top = 0
       Width = 200
       Height = 69
@@ -60,7 +61,7 @@ object GOLMainForm: TGOLMainForm
     object pnlStatus: TPanel
       Left = 0
       Top = 0
-      Width = 510
+      Width = 500
       Height = 69
       Margins.Left = 5
       Margins.Right = 5
@@ -74,20 +75,18 @@ object GOLMainForm: TGOLMainForm
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 504
+        Width = 494
         Height = 63
         Align = alClient
         AutoSize = False
         Caption = 'Game status'
         Layout = tlCenter
-        ExplicitLeft = 144
-        ExplicitTop = 40
-        ExplicitWidth = 55
-        ExplicitHeight = 25
+        ExplicitLeft = 0
+        ExplicitTop = 8
       end
     end
     object btnClear: TButton
-      Left = 910
+      Left = 900
       Top = 0
       Width = 200
       Height = 69
@@ -97,7 +96,7 @@ object GOLMainForm: TGOLMainForm
       OnClick = btnClearClick
     end
     object btnOptions: TButton
-      Left = 1110
+      Left = 1100
       Top = 0
       Width = 200
       Height = 69

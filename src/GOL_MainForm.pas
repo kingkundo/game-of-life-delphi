@@ -1,6 +1,6 @@
 unit GOL_MainForm;
 {
-  Copyright 2020 Tom Taylor (tomxxi).
+  Copyright 2020 Tom Taylor (versionxcontrol).
   This file is part of "Game Of Life" project.
   "Game Of Life" is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -36,7 +36,7 @@ type
     procedure btnClearClick(Sender: TObject);
     procedure btnOptionsClick(Sender: TObject);
   private
-    FGameOfLife: TGameOfLife;
+    FGameThread: TGOLGameThread;
     FSettingsForm: TGOLSettingsForm;
     procedure OnSettingsClose(Sender: TObject);
     procedure OnGameStarted(Sender: TObject);
@@ -60,49 +60,56 @@ begin
   inherited;
   FSettingsForm := nil;
 
-  FGameOfLife := TGameOfLife.Create(Self);
-  FGameOfLife.Parent := Self;
-  FGameOfLife.Align := alClient;
-  FGameOfLife.OnGameStarted := OnGameStarted;
-  FGameOfLife.OnGameStopped := OnGameStopped;
-  FGameOfLife.OnGenerationComplete := OnGenerationComplete;
-  FGameOfLife.GameState := gsStopped;
+  FGameThread := TGOLGameThread.Create(Self);
+  FGameThread.Grid.Parent := Self;
+  FGameThread.Grid.Align := alClient;
+  FGameThread.OnGenerationComplete := OnGenerationComplete;
+  FGameThread.OnGameStarted := OnGameStarted;
+  FGameThread.OnGameStopped := OnGameStopped;
 
-  FGameOfLife.Reset;
+  FGameThread.State := gsStopped;
+  FGameThread.Reset;
+
+  FGameThread.Resume;
+
+  OnGameStopped(Self);
 end;
 
 {------------------------------------------------------------------------------}
 destructor TGOLMainForm.Destroy;
 begin
-  FGameOfLife.Free;
   if FSettingsForm <> nil then
     FSettingsForm.Free;
+
+  FGameThread.Terminate;
+  FGameThread.WaitFor;
+  FGameThread.Free;
   inherited;
 end;
 
 {------------------------------------------------------------------------------}
 procedure TGOLMainForm.btnStartClick(Sender: TObject);
 begin
-  //FGameOfLife.ImportState(COOL_EXPLODER, true);
-  FGameOfLife.GameState := gsStarted;
+  //FGameThread.ImportState(COOL_EXPLODER, true);
+  FGameThread.State := gsStarted;
 end;
 
 {------------------------------------------------------------------------------}
 procedure TGOLMainForm.btnStopClick(Sender: TObject);
 begin
-  FGameOfLife.GameState := gsStopped;
+  FGameThread.State := gsStopped;
 end;
 
 {------------------------------------------------------------------------------}
 procedure TGOLMainForm.btnClearClick(Sender: TObject);
 begin
-  FGameOfLife.Reset;
+  FGameThread.Reset;
 end;
 
 {------------------------------------------------------------------------------}
 procedure TGOLMainForm.btnOptionsClick(Sender: TObject);
 begin
-  FSettingsForm := TGOLSettingsForm.Create(Self, FGameOfLife, OnSettingsClose);
+  FSettingsForm := TGOLSettingsForm.Create(Self, FGameThread, OnSettingsClose);
   FSettingsForm.Show;
   btnOptions.Enabled := False;
 end;
@@ -115,14 +122,14 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-procedure TGOLMainForm.OnGameStarted(Sender: TObject);
+procedure TGOLMainForm.OnGameStarted;
 begin
   btnStop.Enabled := True;
   btnStart.Enabled := False;
 end;
 
 {------------------------------------------------------------------------------}
-procedure TGOLMainForm.OnGameStopped(Sender: TObject);
+procedure TGOLMainForm.OnGameStopped;
 begin
   btnStop.Enabled := False;
   btnStart.Enabled := True;

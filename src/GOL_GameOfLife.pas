@@ -1,6 +1,6 @@
 unit GOL_GameOfLife;
 {
-  Copyright 2020 Tom Taylor (tomxxi).
+  Copyright 2020 Tom Taylor (versionxcontrol).
   This file is part of "Game Of Life" project.
   "Game Of Life" is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -29,183 +29,261 @@ const
 
 type
   TGOLGameState = (gsStopped, gsStarted);
+  TGOLOnGameStateChanged = procedure() of object;
   TGOLOnGenerationComplete = procedure(Sender: TObject; GenerationCount: integer) of object;
 
-  TGameOfLife = class(TXRetroGrid)
+  TGOLGameThread = class(TThread)
   private
-    FMenuEnabled: boolean;
+    FLastState : TGOLGameState;
+    FState : TGOLGameState;
+    FGrid : TXRetroGrid;
+
+    FMenuEnabled : boolean;
     FDrawWhileGameActive: boolean;
     FGenerationCount: integer;
     FGenerationLengthMillis: integer;
-    FGameState: TGOLGameState;
-    FGameTimer: TTimer;
-    FGameStarted: TNotifyEvent;
-    FGameStopped: TNotifyEvent;
+
     FGenerationComplete: TGOLOnGenerationComplete;
-    procedure OnGameTimer(Sender: TObject);
+    FOnGameStarted : TNotifyEvent;
+    FOnGameStopped : TNotifyEvent;
+
+    procedure OnResize(Sender : TObject);
+    procedure OnMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure ChangeGameState(ANewState: TGOLGameState);
-    procedure ChangeGenerationLengthMillis(ANewLength: integer);
+
+    procedure GenerationComplete;
   protected
-    procedure WndProc(var Message: TMessage); override;
-    procedure Resize; override;
-    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
+    FSuspendYield : boolean;
+    FYielding : boolean;
+    procedure Yield(ms : integer);
   public
-    constructor Create(AOwner: TComponent; AOnGameStarted: TNotifyEvent = nil; AOnGameStopped: TNotifyEvent = nil); reintroduce;
+    constructor Create(AOwner : TComponent);
     destructor Destroy; override;
-    function ImportState(NewState: string; PlayImmediately: boolean = False): boolean; reintroduce;
-    property GenerationLengthMillis: integer read FGenerationLengthMillis write ChangeGenerationLengthMillis;
+    procedure Execute; override;
+
+    function ImportState(NewState: string; PlayImmediately: boolean = False): boolean;
+    function Config : TXGridConfig;
+    procedure Invalidate;
+    procedure Reset;
+
+    procedure SuspendYield;
+  published
+    property State : TGOLGameState read FState write ChangeGameState;
+    property Grid : TXRetroGrid read FGrid;
+    property GenerationLengthMillis: integer read FGenerationLengthMillis write FGenerationLengthMillis;
     property AllowDrawDuringGame: boolean read FDrawWhileGameActive write FDrawWhileGameActive;
-    property GameState: TGOLGameState read FGameState write ChangeGameState;
-    property OnGameStarted: TNotifyEvent read FGameStarted write FGameStarted;
-    property OnGameStopped: TNotifyEvent read FGameStopped write FGameStopped;
     property OnGenerationComplete: TGOLOnGenerationComplete read FGenerationComplete write FGenerationComplete;
+    property OnGameStarted : TNotifyEvent read FOnGameStarted write FOnGameStarted;
+    property OnGameStopped : TNotifyEvent read FOnGameStopped write FOnGameStopped;
   end;
 
 implementation
 
 {-----------------------}
-{ TGameOfLife           }
+{ TGOLGameThread        }
 {-----------------------}
 
 {------------------------------------------------------------------------------}
-constructor TGameOfLife.Create(AOwner: TComponent; AOnGameStarted: TNotifyEvent = nil; AOnGameStopped: TNotifyEvent = nil);
+constructor TGOLGameThread.Create(AOwner : TComponent);
 begin
-  inherited Create(AOwner);
-  FDrawWhileGameActive := False;
+  inherited Create(True);
+  FreeOnTerminate := False;
+
+  FOnGameStarted := nil;
+  FOnGameStopped := nil;
+
+  FLastState := gsStopped;
+  State := gsStopped;
+
+  // Setting defaults
+  FDrawWhileGameActive := True;
   FMenuEnabled         := True;
-
-  FGameStarted := AOnGameStarted;
-  FGameStopped := AOnGameStopped;
-
-  FGameTimer := TTimer.Create(Self);
-  FGameTimer.Enabled := True;
-  FGameTimer.OnTimer := OnGameTimer;
   GenerationLengthMillis := 100;
+
+  FGrid := TXRetroGrid.Create(AOwner);
+  FGrid.OnResize := OnResize;
+  FGrid.OnMouseMove := OnMouseMove;
 end;
 
 {------------------------------------------------------------------------------}
-destructor TGameOfLife.Destroy;
+destructor TGOLGameThread.Destroy;
 begin
-  FGameTimer.Free;
+  FGrid.Free;
   inherited;
 end;
 
 {------------------------------------------------------------------------------}
-procedure TGameOfLife.Resize;
-begin
-  GameState := gsStopped;
-  inherited;
-end;
-
-{------------------------------------------------------------------------------}
-procedure TGameOfLife.WndProc(var Message: TMessage);
-begin
-  inherited;
-  case Message.Msg of
-    WM_GENERATIONCOMPLETE: begin
-                             if Assigned(FGenerationComplete) then
-                               FGenerationComplete(Self, FGenerationCount);
-                             Invalidate;
-                           end;
-    WM_GAMESTATECHANGED  : begin
-                             case Message.LParam of
-                               0: if Assigned(FGameStopped) then FGameStopped(Self);
-                               1: if Assigned(FGameStarted) then FGameStarted(Self);
-                             end;
-                           end;
-  end;
-end;
-
-{------------------------------------------------------------------------------}
-procedure TGameOfLife.MouseMove(Shift: TShiftState; X, Y: Integer);
-var
-  SelectedCell: TXCell;
-begin
-  inherited;
-  if (not FIsMouseDown) or ((not FDrawWhileGameActive) and (GameState <> gsStopped)) then
-    Exit;
-
-  SelectedCell := TXCell(Cells.GetCellAtPoint(Point(X, Y)));
-  if SelectedCell = nil then
-    Exit;
-
-  SelectedCell.Active := True;
-
-  if GameState = gsStopped then
-    Invalidate;
-end;
-
-{------------------------------------------------------------------------------}
-function TGameOfLife.ImportState(NewState: string; PlayImmediately: boolean = False): boolean;
-begin
-  GameState := gsStopped;
-
-  Result := inherited ImportState(NewState);
-
-  if Result and PlayImmediately then
-    GameState := gsStarted;
-end;
-
-{------------------------------------------------------------------------------}
-procedure TGameOfLife.ChangeGameState(ANewState: TGOLGameState);
-begin
-  FGameState := ANewState;
-  FGenerationCount := 0;
-  PostMessage(Handle, WM_GAMESTATECHANGED, 0, ord(FGameState));
-end;
-
-{------------------------------------------------------------------------------}
-procedure TGameOfLife.ChangeGenerationLengthMillis(ANewLength: integer);
-begin
-  FGenerationLengthMillis := ANewLength;
-  FGameTimer.Interval := FGenerationLengthMillis;
-end;
-
-{------------------------------------------------------------------------------}
-procedure TGameOfLife.OnGameTimer(Sender: TObject);
+procedure TGOLGameThread.Execute;
 var
   Index: integer;
   AllCellsDead: boolean;
   CurrentCell: TXCell;
   PreviousGenerationCells, CurrentCellNeighbours: TXCellList;
 begin
-  if GameState <> gsStarted then
+  inherited;
+  while not Terminated do
+  begin
+    case FState of
+      gsStarted : begin
+                    AllCellsDead := True;
+                    // Assign current cells to the previous cells memory location...
+                    PreviousGenerationCells := FGrid.Cells;
+                    try
+                      // Create new cell list to represent the all new cells list...
+                      FGrid.Cells := TXCellList.Create(True, FGrid.Config);
+                      for Index := 0 to pred(PreviousGenerationCells.Count) do
+                      begin
+                        CurrentCell := TXCell(PreviousGenerationCells.Items[Index]).Clone;
+                        CurrentCellNeighbours := PreviousGenerationCells.GetNeighboursForCell(CurrentCell, True, True);
+                        try
+                          // If cell is alive and under/overpopulated then die...
+                          if (CurrentCell.Active) and ((CurrentCellNeighbours.Count < 2) or (CurrentCellNeighbours.Count > 3)) then
+                            CurrentCell.Active := False
+                          // If cell is dead and three live neighbours then reanimate...
+                          else if not (CurrentCell.Active) and (CurrentCellNeighbours.Count = 3) then
+                            CurrentCell.Active := True;
+
+                          if CurrentCell.Active then
+                            AllCellsDead := False;
+                        finally
+                          CurrentCellNeighbours.Free;
+                          FGrid.Cells.Add(CurrentCell);
+                        end;
+                      end;
+                    finally
+                      PreviousGenerationCells.Free;
+                    end;
+
+                    Inc(FGenerationCount);
+                    Synchronize(GenerationComplete);
+
+                    if StopGameIfAllDead and AllCellsDead then
+                      FState := gsStopped;
+
+                    Yield(GenerationLengthMillis);
+                  end;
+      gsStopped : begin
+                    Yield(100);
+                  end;
+    end;
+
+    FLastState := FState;
+  end;
+end;
+
+{------------------------------------------------------------------------------}
+procedure TGOLGameThread.GenerationComplete;
+begin
+  if Assigned(FGenerationComplete) then
+    FGenerationComplete(Self, FGenerationCount);
+  FGrid.Invalidate;
+end;
+
+{------------------------------------------------------------------------------}
+function TGOLGameThread.ImportState(NewState: string; PlayImmediately: boolean = False): boolean;
+begin
+  State := gsStopped;
+
+  Result := FGrid.ImportState(NewState);
+
+  if Result and PlayImmediately then
+    State := gsStarted;
+end;
+
+{------------------------------------------------------------------------------}
+procedure TGOLGameThread.ChangeGameState(ANewState: TGOLGameState);
+begin
+  FState := ANewState;
+
+  case FState of
+    gsStarted : if Assigned(FOnGameStarted) then FOnGameStarted(self);
+    gsStopped : if Assigned(FOnGameStopped) then FOnGameStopped(self);
+  end;
+
+  FGenerationCount := 0;
+end;
+
+{------------------------------------------------------------------------------}
+procedure TGOLGameThread.OnResize;
+begin
+  State := gsStopped;
+  Reset;
+  inherited;
+end;
+
+{------------------------------------------------------------------------------}
+procedure TGOLGameThread.OnMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+var
+  SelectedCell: TXCell;
+begin
+  inherited;
+  if (not FGrid.IsMouseDown) or ((not FDrawWhileGameActive) and (FState <> gsStopped)) then
     Exit;
 
-  AllCellsDead := True;
-  // Assign current cells to the previous cells memory location...
-  PreviousGenerationCells := Cells;
-  try
-    // Create new cell list to represent the all new cells list...
-    Cells := TXCellList.Create(True, Config);
-    for Index := 0 to pred(PreviousGenerationCells.Count) do
-    begin
-      CurrentCell := TXCell(PreviousGenerationCells.Items[Index]).Clone;
-      CurrentCellNeighbours := PreviousGenerationCells.GetNeighboursForCell(CurrentCell, True, True);
-      try
-        // If cell is alive and under/overpopulated then die...
-        if (CurrentCell.Active) and ((CurrentCellNeighbours.Count < 2) or (CurrentCellNeighbours.Count > 3)) then
-          CurrentCell.Active := False
-        // If cell is dead and three live neighbours then reanimate...
-        else if not (CurrentCell.Active) and (CurrentCellNeighbours.Count = 3) then
-          CurrentCell.Active := True;
+  SelectedCell := TXCell(FGrid.Cells.GetCellAtPoint(Point(X, Y)));
+  if SelectedCell = nil then
+    Exit;
 
-        if CurrentCell.Active then
-          AllCellsDead := False;
-      finally
-        CurrentCellNeighbours.Free;
-        Cells.Add(CurrentCell);
+  SelectedCell.Active := True;
+
+  if FState = gsStopped then
+    FGrid.Invalidate;
+end;
+
+{------------------------------------------------------------------------------}
+function TGOLGameThread.Config: TXGridConfig;
+begin
+  Result := FGrid.Config;
+end;
+
+{------------------------------------------------------------------------------}
+procedure TGOLGameThread.Invalidate;
+begin
+  FGrid.Invalidate;
+end;
+
+{------------------------------------------------------------------------------}
+procedure TGOLGameThread.Reset;
+begin
+  State := gsStopped;
+  FGrid.Reset;
+end;
+
+{------------------------------------------------------------------------------}
+procedure TGOLGameThread.SuspendYield;
+begin
+  if FYielding then
+    FSuspendYield := True;
+end;
+
+{------------------------------------------------------------------------------}
+procedure TGOLGameThread.Yield(ms : integer);
+var
+  Index : integer;
+begin
+  FYielding := True;
+  try
+    if (ms < 250) then
+      Sleep(ms)
+    else
+    begin
+      for Index := 0 to ms div 250 do
+      begin
+        if (FSuspendYield) then
+        begin
+          FSuspendYield := false;
+          break;
+        end;
+
+        if (not Terminated) then
+          Sleep(250)
+        else
+          break
       end;
     end;
   finally
-    PreviousGenerationCells.Free;
+    FYielding := false;
   end;
-
-  Inc(FGenerationCount);
-  PostMessage(Handle, WM_GENERATIONCOMPLETE, 0, 0);
-
-  if StopGameIfAllDead and AllCellsDead then
-    GameState := gsStopped;
 end;
 
 {-}

@@ -42,9 +42,9 @@ type
   private
     FInitialising: boolean;
     FOnClose: TNotifyEvent;
-    FGameOfLife: TGameOfLife;
+    FGameThread: TGOLGameThread;
   public
-    constructor Create(AOwner: TComponent; AGameOfLife: TGameOfLife; AOnClose: TNotifyEvent); reintroduce;
+    constructor Create(AOwner: TComponent; AGameThread: TGOLGameThread; AOnClose: TNotifyEvent); reintroduce;
   end;
 
 implementation
@@ -52,10 +52,10 @@ implementation
 {$R *.dfm}
 
 {------------------------------------------------------------------------------}
-constructor TGOLSettingsForm.Create(AOwner: TComponent; AGameOfLife: TGameOfLife; AOnClose: TNotifyEvent);
+constructor TGOLSettingsForm.Create(AOwner: TComponent; AGameThread: TGOLGameThread; AOnClose: TNotifyEvent);
 begin
   inherited Create(AOwner);
-  FGameOfLife := AGameOfLife;
+  FGameThread := AGameThread;
   FOnClose := AOnClose;
 end;
 
@@ -64,7 +64,7 @@ procedure TGOLSettingsForm.FormShow(Sender: TObject);
 var
   Index: integer;
 begin
-  if FGameOfLife = nil then
+  if FGameThread = nil then
   begin
     Close;
     Exit;
@@ -76,15 +76,15 @@ begin
   for Index := 1 to 10 do
     cmbGenLengthSecs.Items.Add(FloatToStr(Index/10));
   for Index := 0 to pred(cmbGenLengthSecs.Items.Count) do
-    if FloatToStr(FGameOfLife.GenerationLengthMillis / 1000) = cmbGenLengthSecs.Items[Index] then
+    if FloatToStr(FGameThread.GenerationLengthMillis / 1000) = cmbGenLengthSecs.Items[Index] then
       cmbGenLengthSecs.ItemIndex := Index;
 
-  clrAlive.Selected := FGameOfLife.Config.DefaultActiveCellColor;
-  chkAliveCellColorRandom.Checked := FGameOfLife.Config.DefaultActiveCellColor = clRandom;
-  clrDead.Selected := FGameOfLife.Config.BackColor;
+  clrAlive.Selected := FGameThread.Config.DefaultActiveCellColor;
+  chkAliveCellColorRandom.Checked := FGameThread.Config.DefaultActiveCellColor = clRandom;
+  clrDead.Selected := FGameThread.Config.BackColor;
 
-  chkAllowDrawDuringGame.Checked := FGameOfLife.AllowDrawDuringGame;
-  chkInfiniteGrid.Checked := FGameOfLife.Config.Infinite;
+  chkAllowDrawDuringGame.Checked := FGameThread.AllowDrawDuringGame;
+  chkInfiniteGrid.Checked := FGameThread.Config.Infinite;
 
   FInitialising := False;
 end;
@@ -103,7 +103,7 @@ begin
   if FInitialising then
     Exit;
 
-  FGameOfLife.GenerationLengthMillis := floor(StrToFloat(cmbGenLengthSecs.Items[cmbGenLengthSecs.ItemIndex]) * 1000);
+  FGameThread.GenerationLengthMillis := floor(StrToFloat(cmbGenLengthSecs.Items[cmbGenLengthSecs.ItemIndex]) * 1000);
 end;
 
 {------------------------------------------------------------------------------}
@@ -121,8 +121,8 @@ begin
   if FInitialising then
     Exit;
 
-  FGameOfLife.AllowDrawDuringGame := chkAllowDrawDuringGame.Checked;
-  FGameOfLife.Invalidate;
+  FGameThread.AllowDrawDuringGame := chkAllowDrawDuringGame.Checked;
+  FGameThread.Invalidate;
 end;
 
 {------------------------------------------------------------------------------}
@@ -131,7 +131,7 @@ begin
   if FInitialising then
     Exit;
 
-  FGameOfLife.Config.Infinite := chkInfiniteGrid.Checked;
+  FGameThread.Config.Infinite := chkInfiniteGrid.Checked;
 end;
 
 {------------------------------------------------------------------------------}
@@ -147,7 +147,7 @@ begin
   else
     Col := clrAlive.Selected;
 
-  FGameOfLife.Config.DefaultActiveCellColor := Col;
+  FGameThread.Config.DefaultActiveCellColor := Col;
 end;
 
 {------------------------------------------------------------------------------}
@@ -156,7 +156,7 @@ begin
   if FInitialising then
     Exit;
 
-  FGameOfLife.Config.BackColor := clrDead.Selected;
+  FGameThread.Config.BackColor := clrDead.Selected;
 end;
 
 {------------------------------------------------------------------------------}
