@@ -10,7 +10,7 @@ Conway's Game of Life is a Turing complete zero-player game that follows the fol
   - Any live cell with more than three live neighbours dies, as if by overpopulation.
   - Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
   
-Every cell in the game has this ruleset applied to each generation of cells and that is the fundamentals of how the game works. This is a 100% accurate recreation with an identical ruleset.
+This ruleset is applied to each generation of cells and that is the fundamentals of how the game works. This is a 100% accurate recreation with an identical ruleset.
 
 The only difference is that in the original game there were outer walls. In this version, the grid that the game is played on wraps around, making the game area essentially infinite.
 
