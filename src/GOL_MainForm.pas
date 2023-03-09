@@ -25,12 +25,12 @@ uses
 type
   TGOLMainForm = class(TForm)
     pnlControls: TPanel;
-    btnStart: TButton;
-    btnStop: TButton;
     pnlStatus: TPanel;
     btnClear: TButton;
     btnOptions: TButton;
     lblGameStatus: TLabel;
+    btnStart: TButton;
+    btnStop: TButton;
     procedure btnStartClick(Sender: TObject);
     procedure btnStopClick(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
