@@ -1,6 +1,6 @@
 unit GOL_GameOfLife;
 {
-  Copyright 2020 Tom Taylor (versionxcontrol).
+  Copyright 2020 Tom Taylor (kingkundo).
   This file is part of "Game Of Life" project.
   "Game Of Life" is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,7 +23,6 @@ uses
   ExtCtrls;
 
 const
-  StopGameIfAllDead     = False;
   WM_GENERATIONCOMPLETE = WM_USER + 100;
   WM_GAMESTATECHANGED   = WM_USER + 101;
 
@@ -38,6 +37,8 @@ type
     FState : TGOLGameState;
     FGrid : TXRetroGrid;
 
+    F1PreviousGenerationCellStructure, F2PreviousGenerationCellStructure : string;
+
     FMenuEnabled : boolean;
     FDrawWhileGameActive: boolean;
     FGenerationCount: integer;
@@ -46,6 +47,7 @@ type
     FGenerationComplete: TGOLOnGenerationComplete;
     FOnGameStarted : TNotifyEvent;
     FOnGameStopped : TNotifyEvent;
+    FOnGridChanged : TNotifyEvent;
 
     procedure OnResize(Sender : TObject);
     procedure OnMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
@@ -75,6 +77,7 @@ type
     property OnGenerationComplete: TGOLOnGenerationComplete read FGenerationComplete write FGenerationComplete;
     property OnGameStarted : TNotifyEvent read FOnGameStarted write FOnGameStarted;
     property OnGameStopped : TNotifyEvent read FOnGameStopped write FOnGameStopped;
+    property OnGridChanged : TNotifyEvent read FOnGridChanged write FOnGridChanged;
   end;
 
 implementation
@@ -91,6 +94,7 @@ begin
 
   FOnGameStarted := nil;
   FOnGameStopped := nil;
+  FOnGridChanged := nil;
 
   FLastState := gsStopped;
   State := gsStopped;
@@ -126,9 +130,12 @@ begin
     case FState of
       gsStarted : begin
                     AllCellsDead := True;
+
                     // Assign current cells to the previous cells memory location...
                     PreviousGenerationCells := FGrid.Cells;
                     try
+                      F2PreviousGenerationCellStructure := F1PreviousGenerationCellStructure;
+                      F1PreviousGenerationCellStructure := PreviousGenerationCells.Structure;
                       // Create new cell list to represent the all new cells list...
                       FGrid.Cells := TXCellList.Create(True, FGrid.Config);
                       for Index := 0 to pred(PreviousGenerationCells.Count) do
@@ -157,8 +164,19 @@ begin
                     Inc(FGenerationCount);
                     Synchronize(GenerationComplete);
 
-                    if StopGameIfAllDead and AllCellsDead then
-                      FState := gsStopped;
+                    // Stop game is all cells are dead...
+                    if (Config.StopOnDeath and AllCellsDead) then
+                      State := gsStopped;
+
+                    // Stop game if cells are flipping between 2 states again and again...
+                    if Config.StopOnStagnation then
+                    begin
+                      if (F1PreviousGenerationCellStructure = FGrid.Cells.Structure) then
+                        State := gsStopped;
+
+                      if (F2PreviousGenerationCellStructure = FGrid.Cells.Structure) then
+                        State := gsStopped;
+                    end;
 
                     Yield(GenerationLengthMillis);
                   end;
@@ -228,6 +246,8 @@ begin
 
   if FState = gsStopped then
     FGrid.Invalidate;
+
+  if Assigned(FOnGridChanged) then FOnGridChanged(self);
 end;
 
 {------------------------------------------------------------------------------}

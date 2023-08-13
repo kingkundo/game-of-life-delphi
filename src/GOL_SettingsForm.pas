@@ -30,6 +30,8 @@ type
     chkAliveCellColorRandom: TCheckBox;
     chkAllowDrawDuringGame: TCheckBox;
     chkInfiniteGrid: TCheckBox;
+    chkStopOnDeath: TCheckBox;
+    chkStopOnStagnation: TCheckBox;
     procedure btnCloseClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure cmbGenLengthSecsChange(Sender: TObject);
@@ -39,6 +41,8 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure chkAllowDrawDuringGameClick(Sender: TObject);
     procedure chkInfiniteGridClick(Sender: TObject);
+    procedure chkStopOnDeathClick(Sender: TObject);
+    procedure chkStopOnStagnationClick(Sender: TObject);
   private
     FInitialising: boolean;
     FOnClose: TNotifyEvent;
@@ -85,6 +89,8 @@ begin
 
   chkAllowDrawDuringGame.Checked := FGameThread.AllowDrawDuringGame;
   chkInfiniteGrid.Checked := FGameThread.Config.Infinite;
+  chkStopOnDeath.Checked := FGameThread.Config.StopOnDeath;
+  chkStopOnStagnation.Checked := FGameThread.Config.StopOnStagnation;
 
   FInitialising := False;
 end;
@@ -135,6 +141,24 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
+procedure TGOLSettingsForm.chkStopOnDeathClick(Sender: TObject);
+begin
+  if FInitialising then
+    Exit;
+
+  FGameThread.Config.StopOnDeath := chkStopOnDeath.Checked;
+end;
+
+{------------------------------------------------------------------------------}
+procedure TGOLSettingsForm.chkStopOnStagnationClick(Sender: TObject);
+begin
+  if FInitialising then
+    Exit;
+
+  FGameThread.Config.StopOnStagnation := chkStopOnStagnation.Checked;
+end;
+
+{------------------------------------------------------------------------------}
 procedure TGOLSettingsForm.clrAliveChange(Sender: TObject);
 var
   Col: TColor;
@@ -148,6 +172,9 @@ begin
     Col := clrAlive.Selected;
 
   FGameThread.Config.DefaultActiveCellColor := Col;
+
+  if Sender <> nil then
+    chkAliveCellColorRandom.Checked := False;
 end;
 
 {------------------------------------------------------------------------------}

@@ -1,6 +1,6 @@
 unit GOL_MainForm;
 {
-  Copyright 2020 Tom Taylor (versionxcontrol).
+  Copyright 2020 Tom Taylor (kingkundo).
   This file is part of "Game Of Life" project.
   "Game Of Life" is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -31,6 +31,9 @@ type
     lblGameStatus: TLabel;
     btnStart: TButton;
     btnStop: TButton;
+    pnlButtons: TPanel;
+    Panel1: TPanel;
+    lblGenerationCount: TLabel;
     procedure btnStartClick(Sender: TObject);
     procedure btnStopClick(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
@@ -41,6 +44,7 @@ type
     procedure OnSettingsClose(Sender: TObject);
     procedure OnGameStarted(Sender: TObject);
     procedure OnGameStopped(Sender: TObject);
+    procedure OnGridChanged(Sender : TObject);
     procedure OnGenerationComplete(Sender: TObject; GenerationCount: integer);
   public
     constructor Create(AOwner: TComponent); override;
@@ -66,6 +70,7 @@ begin
   FGameThread.OnGenerationComplete := OnGenerationComplete;
   FGameThread.OnGameStarted := OnGameStarted;
   FGameThread.OnGameStopped := OnGameStopped;
+  FGameThread.OnGridChanged := OnGridChanged;
 
   FGameThread.State := gsStopped;
   FGameThread.Reset;
@@ -98,6 +103,7 @@ end;
 procedure TGOLMainForm.btnStopClick(Sender: TObject);
 begin
   FGameThread.State := gsStopped;
+  btnStart.Enabled := True;
 end;
 
 {------------------------------------------------------------------------------}
@@ -132,14 +138,21 @@ end;
 procedure TGOLMainForm.OnGameStopped;
 begin
   btnStop.Enabled := False;
+  btnStart.Enabled := False;
+  lblGameStatus.Caption := format('The game is not running.%sDraw in the box to add life cells.', [sLineBreak]);
+end;
+
+{------------------------------------------------------------------------------}
+procedure TGOLMainForm.OnGridChanged;
+begin
   btnStart.Enabled := True;
-  lblGameStatus.Caption := 'Game is not running.'#13#10'Draw in the box to add life cells';
 end;
 
 {------------------------------------------------------------------------------}
 procedure TGOLMainForm.OnGenerationComplete(Sender: TObject; GenerationCount: integer);
 begin
-  lblGameStatus.Caption := format('Game is running. Current generation: %d', [GenerationCount]);
+  lblGameStatus.Caption := 'The game is running';
+  lblGenerationCount.Caption := IntToStr(GenerationCount);
 end;
 
 {-}
