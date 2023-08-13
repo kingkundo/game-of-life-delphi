@@ -1,6 +1,6 @@
 object GOLSettingsForm: TGOLSettingsForm
-  Left = 0
-  Top = 0
+  Left = 972
+  Top = 335
   BorderStyle = bsDialog
   Caption = 'Settings'
   ClientHeight = 303
@@ -14,7 +14,6 @@ object GOLSettingsForm: TGOLSettingsForm
   KeyPreview = True
   OldCreateOrder = False
   Position = poMainFormCenter
-  Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanInertia, igoParentPassthrough]
   OnClose = FormClose
   OnShow = FormShow
   PixelsPerInch = 96
@@ -27,9 +26,7 @@ object GOLSettingsForm: TGOLSettingsForm
     Align = alClient
     Caption = 'Game of Life settings'
     TabOrder = 0
-    ExplicitHeight = 222
     object lblGenLength: TLabel
-      AlignWithMargins = True
       Left = 16
       Top = 38
       Width = 198
@@ -44,7 +41,6 @@ object GOLSettingsForm: TGOLSettingsForm
       Layout = tlCenter
     end
     object lblAliveCellColor: TLabel
-      AlignWithMargins = True
       Left = 16
       Top = 78
       Width = 103
@@ -59,7 +55,6 @@ object GOLSettingsForm: TGOLSettingsForm
       Layout = tlCenter
     end
     object lblDeadCellColor: TLabel
-      AlignWithMargins = True
       Left = 16
       Top = 138
       Width = 105
@@ -85,6 +80,7 @@ object GOLSettingsForm: TGOLSettingsForm
       Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Style = []
+      ItemHeight = 21
       ParentFont = False
       TabOrder = 0
       OnChange = cmbGenLengthSecsChange
@@ -99,6 +95,7 @@ object GOLSettingsForm: TGOLSettingsForm
       Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Style = []
+      ItemHeight = 16
       ParentFont = False
       TabOrder = 1
       OnChange = clrAliveChange
@@ -113,6 +110,7 @@ object GOLSettingsForm: TGOLSettingsForm
       Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Style = []
+      ItemHeight = 16
       ParentFont = False
       TabOrder = 2
       OnChange = clrDeadChange
@@ -171,7 +169,6 @@ object GOLSettingsForm: TGOLSettingsForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 222
     DesignSize = (
       413
       46)
