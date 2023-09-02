@@ -95,7 +95,6 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGOLMainForm.btnStartClick(Sender: TObject);
 begin
-  //FGameThread.ImportState(COOL_EXPLODER, true);
   FGameThread.State := gsStarted;
 end;
 

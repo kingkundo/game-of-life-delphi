@@ -14,6 +14,7 @@ uses
   ExtCtrls,
   StdCtrls,
   TX_RetroGrid,
+  GOL_ExampleStructures,
   GOL_GameOfLife;
 
 type
@@ -32,6 +33,9 @@ type
     chkInfiniteGrid: TCheckBox;
     chkStopOnDeath: TCheckBox;
     chkStopOnStagnation: TCheckBox;
+    Label1: TLabel;
+    cmbExampleStructures: TComboBox;
+    btnApplyStructure: TButton;
     procedure btnCloseClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure cmbGenLengthSecsChange(Sender: TObject);
@@ -43,6 +47,7 @@ type
     procedure chkInfiniteGridClick(Sender: TObject);
     procedure chkStopOnDeathClick(Sender: TObject);
     procedure chkStopOnStagnationClick(Sender: TObject);
+    procedure btnApplyStructureClick(Sender: TObject);
   private
     FInitialising: boolean;
     FOnClose: TNotifyEvent;
@@ -184,6 +189,13 @@ begin
     Exit;
 
   FGameThread.Config.BackColor := clrDead.Selected;
+end;
+
+{------------------------------------------------------------------------------}
+procedure TGOLSettingsForm.btnApplyStructureClick(Sender: TObject);
+begin
+  FGameThread.Reset;
+  FGameThread.ImportState(EXAMPLE_STRUCTURES[cmbExampleStructures.ItemIndex + 1], true);
 end;
 
 {------------------------------------------------------------------------------}

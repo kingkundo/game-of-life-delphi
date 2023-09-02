@@ -13,6 +13,7 @@ interface
 uses
   TX_RetroGrid,
   Math,
+  Types,
   Windows,
   Messages,
   Classes,
@@ -53,6 +54,8 @@ type
     procedure OnMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure ChangeGameState(ANewState: TGOLGameState);
 
+    procedure GameStarted;
+    procedure GameStopped;
     procedure GenerationComplete;
   protected
     FSuspendYield : boolean;
@@ -190,6 +193,20 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
+procedure TGOLGameThread.GameStarted;
+begin
+  if Assigned(FOnGameStarted) then
+    FOnGameStarted(self);
+end;
+
+{------------------------------------------------------------------------------}
+procedure TGOLGameThread.GameStopped;
+begin
+  if Assigned(FOnGameStopped) then
+    FOnGameStopped(self);
+end;
+
+{------------------------------------------------------------------------------}
 procedure TGOLGameThread.GenerationComplete;
 begin
   if Assigned(FGenerationComplete) then
@@ -214,8 +231,8 @@ begin
   FState := ANewState;
 
   case FState of
-    gsStarted : if Assigned(FOnGameStarted) then FOnGameStarted(self);
-    gsStopped : if Assigned(FOnGameStopped) then FOnGameStopped(self);
+    gsStarted : Synchronize(GameStarted);
+    gsStopped : Synchronize(GameStopped);
   end;
 
   FGenerationCount := 0;

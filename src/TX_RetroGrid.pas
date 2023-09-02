@@ -45,7 +45,7 @@ type
     procedure SetBackColor(AColor: TColor);
     procedure SetDefaultActiveCellColor(AColor: TColor);
   public
-    constructor Create(ALayoutType: TXGridLayoutType = gltSquare; ABackColor: TColor = clBlack; ADefCellColor: TColor = clRandom; AInfinite: boolean = True; AStopOnDeath : boolean = True; AStopOnStagnation : boolean = False; AColCount: integer = TXDefaultColumnCount; ARowCount: integer = TXDefaultRowCount); virtual;
+    constructor Create(ALayoutType: TXGridLayoutType = gltSquare; ABackColor: TColor = clBlack; ADefCellColor: TColor = clRandom; AInfinite: boolean = True; AStopOnDeath : boolean = True; AStopOnStagnation : boolean = True; AColCount: integer = TXDefaultColumnCount; ARowCount: integer = TXDefaultRowCount); virtual;
     property ColumnCount: integer read FColCount write SetColumnCount;
     property RowCount: integer read FRowCount write SetRowCount;
     property Infinite: boolean read FInfinite write SetInfinite;
@@ -84,7 +84,6 @@ type
   TXCellList = class(TObjectList)
   private
     FGridConf: TXGridConfig;
-    FStructure: string;
     function GetStructure : string;
   public
     constructor Create(AOwnsObjects: boolean; AGridConf: TXGridConfig); reintroduce;
@@ -128,7 +127,7 @@ implementation
 {-----------------------}
 
 {------------------------------------------------------------------------------}
-constructor TXGridConfig.Create(ALayoutType: TXGridLayoutType = gltSquare; ABackColor: TColor = clBlack; ADefCellColor: TColor = clRandom; AInfinite: boolean = True; AStopOnDeath : boolean = True; AStopOnStagnation : boolean = False; AColCount: integer = TXDefaultColumnCount; ARowCount: integer = TXDefaultRowCount);
+constructor TXGridConfig.Create(ALayoutType: TXGridLayoutType = gltSquare; ABackColor: TColor = clBlack; ADefCellColor: TColor = clRandom; AInfinite: boolean = True; AStopOnDeath : boolean = True; AStopOnStagnation : boolean = True; AColCount: integer = TXDefaultColumnCount; ARowCount: integer = TXDefaultRowCount);
 begin
   FLayoutType := ALayoutType;
   FInfinite := AInfinite;

@@ -3,7 +3,7 @@ object GOLSettingsForm: TGOLSettingsForm
   Top = 335
   BorderStyle = bsDialog
   Caption = 'Settings'
-  ClientHeight = 354
+  ClientHeight = 427
   ClientWidth = 413
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,15 +20,18 @@ object GOLSettingsForm: TGOLSettingsForm
     Left = 0
     Top = 0
     Width = 413
-    Height = 308
+    Height = 381
     Align = alClient
     Caption = 'Game of Life settings'
     TabOrder = 0
     ExplicitWidth = 409
-    ExplicitHeight = 256
+    ExplicitHeight = 307
+    DesignSize = (
+      413
+      381)
     object lblGenLength: TLabel
       Left = 16
-      Top = 38
+      Top = 107
       Width = 198
       Height = 21
       Caption = 'Generation length (seconds):'
@@ -42,7 +45,7 @@ object GOLSettingsForm: TGOLSettingsForm
     end
     object lblAliveCellColor: TLabel
       Left = 16
-      Top = 78
+      Top = 147
       Width = 103
       Height = 21
       Caption = 'Alive cell color:'
@@ -56,7 +59,7 @@ object GOLSettingsForm: TGOLSettingsForm
     end
     object lblDeadCellColor: TLabel
       Left = 16
-      Top = 138
+      Top = 207
       Width = 105
       Height = 21
       Caption = 'Dead cell color:'
@@ -68,9 +71,23 @@ object GOLSettingsForm: TGOLSettingsForm
       ParentFont = False
       Layout = tlCenter
     end
+    object Label1: TLabel
+      Left = 16
+      Top = 35
+      Width = 178
+      Height = 21
+      Caption = 'Import example structure:'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      Layout = tlCenter
+    end
     object cmbGenLengthSecs: TComboBox
       Left = 220
-      Top = 37
+      Top = 106
       Width = 181
       Height = 29
       AutoCloseUp = True
@@ -81,12 +98,12 @@ object GOLSettingsForm: TGOLSettingsForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      TabOrder = 0
+      TabOrder = 2
       OnChange = cmbGenLengthSecsChange
     end
     object clrAlive: TColorBox
       Left = 220
-      Top = 78
+      Top = 147
       Width = 181
       Height = 22
       Font.Charset = DEFAULT_CHARSET
@@ -95,12 +112,12 @@ object GOLSettingsForm: TGOLSettingsForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      TabOrder = 1
+      TabOrder = 3
       OnChange = clrAliveChange
     end
     object clrDead: TColorBox
       Left = 220
-      Top = 138
+      Top = 207
       Width = 181
       Height = 22
       Font.Charset = DEFAULT_CHARSET
@@ -109,12 +126,12 @@ object GOLSettingsForm: TGOLSettingsForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      TabOrder = 2
+      TabOrder = 4
       OnChange = clrDeadChange
     end
     object chkAliveCellColorRandom: TCheckBox
       Left = 220
-      Top = 105
+      Top = 174
       Width = 181
       Height = 17
       Caption = 'Random'
@@ -124,12 +141,12 @@ object GOLSettingsForm: TGOLSettingsForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      TabOrder = 3
+      TabOrder = 5
       OnClick = chkAliveCellColorRandomClick
     end
     object chkAllowDrawDuringGame: TCheckBox
       Left = 16
-      Top = 176
+      Top = 245
       Width = 217
       Height = 25
       Caption = 'Allow drawing during game'
@@ -139,12 +156,12 @@ object GOLSettingsForm: TGOLSettingsForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      TabOrder = 4
+      TabOrder = 6
       OnClick = chkAllowDrawDuringGameClick
     end
     object chkInfiniteGrid: TCheckBox
       Left = 16
-      Top = 207
+      Top = 276
       Width = 198
       Height = 25
       Caption = 'Simulate an infinite grid'
@@ -154,12 +171,12 @@ object GOLSettingsForm: TGOLSettingsForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      TabOrder = 5
+      TabOrder = 7
       OnClick = chkInfiniteGridClick
     end
     object chkStopOnDeath: TCheckBox
       Left = 16
-      Top = 238
+      Top = 307
       Width = 281
       Height = 25
       Caption = 'Stop the game when all cells are dead'
@@ -171,40 +188,80 @@ object GOLSettingsForm: TGOLSettingsForm
       Font.Style = []
       ParentFont = False
       State = cbChecked
-      TabOrder = 6
+      TabOrder = 8
       OnClick = chkStopOnDeathClick
     end
     object chkStopOnStagnation: TCheckBox
       Left = 16
-      Top = 269
+      Top = 338
       Width = 329
       Height = 25
       Caption = 'Stop the game when all cells have stagnated'
+      Checked = True
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      TabOrder = 7
+      State = cbChecked
+      TabOrder = 9
       OnClick = chkStopOnStagnationClick
+    end
+    object cmbExampleStructures: TComboBox
+      Left = 16
+      Top = 68
+      Width = 282
+      Height = 29
+      AutoCloseUp = True
+      Style = csDropDownList
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ItemIndex = 0
+      ParentFont = False
+      TabOrder = 0
+      Text = 'Default example structure'
+      OnChange = cmbGenLengthSecsChange
+      Items.Strings = (
+        'Default example structure'
+        'Gopher structure example'
+        'Cool exploder structure')
+    end
+    object btnApplyStructure: TButton
+      Left = 304
+      Top = 66
+      Width = 97
+      Height = 31
+      Anchors = [akRight, akBottom]
+      Caption = 'Apply'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 1
+      OnClick = btnApplyStructureClick
     end
   end
   object pnlControls: TPanel
     Left = 0
-    Top = 308
+    Top = 381
     Width = 413
     Height = 46
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 256
+    ExplicitTop = 307
     ExplicitWidth = 409
     DesignSize = (
       413
       46)
     object btnClose: TButton
-      Left = 255
+      Left = 263
       Top = 6
       Width = 138
       Height = 35
@@ -218,7 +275,6 @@ object GOLSettingsForm: TGOLSettingsForm
       ParentFont = False
       TabOrder = 0
       OnClick = btnCloseClick
-      ExplicitLeft = 251
     end
   end
 end

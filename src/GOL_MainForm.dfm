@@ -35,6 +35,8 @@ object GOLMainForm: TGOLMainForm
     Color = clBtnShadow
     ParentBackground = False
     TabOrder = 1
+    ExplicitTop = 791
+    ExplicitWidth = 1300
     object pnlStatus: TPanel
       Left = 0
       Top = 0
@@ -45,7 +47,7 @@ object GOLMainForm: TGOLMainForm
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 0
-      ExplicitWidth = 500
+      ExplicitWidth = 423
       object lblGameStatus: TLabel
         Left = 0
         Top = 0
@@ -55,8 +57,8 @@ object GOLMainForm: TGOLMainForm
         Alignment = taCenter
         Caption = 'Game status'
         Layout = tlCenter
-        ExplicitLeft = -73
-        ExplicitTop = 6
+        ExplicitWidth = 103
+        ExplicitHeight = 25
       end
     end
     object pnlButtons: TPanel
@@ -68,6 +70,7 @@ object GOLMainForm: TGOLMainForm
       BevelInner = bvSpace
       ParentColor = True
       TabOrder = 1
+      ExplicitLeft = 496
       object btnClear: TButton
         Left = 402
         Top = 2
@@ -118,7 +121,7 @@ object GOLMainForm: TGOLMainForm
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 2
-      ExplicitLeft = 0
+      ExplicitLeft = 423
       object lblGenerationCount: TLabel
         Left = 0
         Top = 0
