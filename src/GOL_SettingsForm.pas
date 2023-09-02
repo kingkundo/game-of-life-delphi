@@ -247,10 +247,10 @@ begin
     if (State = '') or (Pos(':', State) = 0) then
       Exit;
 
-    FGameThread.ImportState(State, AutoStart);
+    FGameThread.ImportPattern(State, AutoStart);
   end
   else
-    FGameThread.ImportState(EXAMPLE_PATTERNS[cmbPatterns.ItemIndex], AutoStart);
+    FGameThread.ImportPattern(EXAMPLE_PATTERNS[cmbPatterns.ItemIndex], AutoStart);
 
   ResetForm;
 end;
@@ -279,7 +279,7 @@ begin
 
     StateStrs := TStringList.Create;
     try
-      StateStrs.Add(FGameThread.ExportState);
+      StateStrs.Add(FGameThread.ExportPattern);
       StateStrs.SaveToFile(FileDialog.FileName);
     finally
       StateStrs.Free;

@@ -67,8 +67,8 @@ type
     destructor Destroy; override;
     procedure Execute; override;
 
-    function ImportState(NewState: string; PlayImmediately: boolean = False): boolean;
-    function ExportState : string;
+    function ImportPattern(NewState: string; PlayImmediately: boolean = False): boolean;
+    function ExportPattern : string;
     function Config : TXGridConfig;
     procedure Invalidate;
     procedure Reset;
@@ -224,7 +224,7 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-function TGOLGameThread.ImportState(NewState: string; PlayImmediately: boolean = False): boolean;
+function TGOLGameThread.ImportPattern(NewState: string; PlayImmediately: boolean = False): boolean;
 begin
   State := gsStopped;
   Result := FGrid.ImportState(NewState);
@@ -235,7 +235,7 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-function TGOLGameThread.ExportState : string;
+function TGOLGameThread.ExportPattern : string;
 begin
   Result := FGrid.ExportState;
 end;

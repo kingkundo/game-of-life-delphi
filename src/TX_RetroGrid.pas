@@ -34,6 +34,7 @@ type
     FColCount, FRowCount: integer;
     FBackColor, FDefaultActiveCellColor: TColor;
     FInfinite, FStopOnDeath, FStopOnStagnation: boolean;
+    FWindowWidth,FWindowHeight : integer;
     FLayoutType: TXGridLayoutType;
     FOnUpdate: TNotifyEvent;
     procedure SetColumnCount(ACol: integer);
@@ -41,6 +42,8 @@ type
     procedure SetInfinite(AInfinite: boolean);
     procedure SetStopOnDeath(AStopDeath : boolean);
     procedure SetStopOnStagnation(AStopStagnation : boolean);
+    procedure SetWindowWidth(AWindowWidth : integer);
+    procedure SetWindowHeight(AWindowHeight : integer);
     procedure SetLayoutType(AType: TXGridLayoutType);
     procedure SetBackColor(AColor: TColor);
     procedure SetDefaultActiveCellColor(AColor: TColor);
@@ -51,6 +54,8 @@ type
     property Infinite: boolean read FInfinite write SetInfinite;
     property StopOnDeath : boolean read FStopOnDeath write SetStopOnDeath;
     property StopOnStagnation : boolean read FStopOnStagnation write SetStopOnStagnation;
+    property WindowWidth : integer read FWindowWidth write SetWindowWidth;
+    property WindowHeight : integer read FWindowHeight write SetWindowHeight;
     property BackColor: TColor read FBackColor write SetBackColor;
     property LayoutType: TXGridLayoutType read FLayoutType write SetLayoutType;
     property DefaultActiveCellColor: TColor read FDefaultActiveCellColor write SetDefaultActiveCellColor;
@@ -179,6 +184,22 @@ begin
   FStopOnStagnation := AStopStagnation;
   if Assigned(FOnUpdate) then
     FOnUpdate(Self);
+end;
+
+{------------------------------------------------------------------------------}
+procedure TXGridConfig.SetWindowWidth(AWindowWidth : integer);
+begin
+  FWindowWidth := AWindowWidth;
+  if Assigned(FOnUpdate) then
+    FOnUpdate(Self);
+end;
+
+{------------------------------------------------------------------------------}
+procedure TXGridConfig.SetWindowHeight(AWindowHeight : integer);
+begin
+  FWindowHeight := AWindowHeight;
+  if Assigned(FOnUpdate) then
+    FOnUpdate(Self)
 end;
 
 {------------------------------------------------------------------------------}
@@ -576,7 +597,7 @@ begin
     GridSettings.Delimiter := ':';
     GridSettings.DelimitedText := NewState;
 
-    if GridSettings.Count < 5 then
+    if GridSettings.Count < 7 then
       Exit;
 
     FGridConf.ColumnCount := StrToIntDef(GridSettings[0], TXDefaultColumnCount);
@@ -586,6 +607,15 @@ begin
     FGridConf.FDefaultActiveCellColor := StrToIntDef(GridSettings[4], 0);
     FGridConf.StopOnDeath := StrToBoolDef(GridSettings[5], True);
     FGridConf.StopOnStagnation := StrToBoolDef(GridSettings[6], False);
+    FGridConf.WindowWidth := StrToIntDef(GridSettings[7], 0);
+    FGridConf.WindowHeight := StrToIntDef(GridSettings[8], 0);
+
+    if FGridConf.WindowWidth <> 0 then
+      Parent.Width := FGridConf.WindowWidth;
+
+    if FGridConf.WindowHeight <> 0 then
+      Parent.Height := FGridConf.WindowHeight;
+
     Reset;
 
     for Index := 5 to pred(GridSettings.Count) do
@@ -634,7 +664,17 @@ begin
   else
     Infinite := 0;
 
-  Result := format('%d:%d:%d:%d:%d:%s:%s', [FGridConf.ColumnCount, FGridConf.RowCount, Infinite, FGridConf.FBackColor, FGridConf.FDefaultActiveCellColor, BoolToStr(FGridConf.StopOnDeath), BoolToStr(FGridConf.StopOnStagnation)]);
+  Result := format('%d:%d:%d:%d:%d:%s:%s:%d:%d', [
+    FGridConf.ColumnCount,
+    FGridConf.RowCount,
+    Infinite,
+    FGridConf.FBackColor,
+    FGridConf.FDefaultActiveCellColor,
+    BoolToStr(FGridConf.StopOnDeath),
+    BoolToStr(FGridConf.StopOnStagnation),
+    Parent.Width,
+    Parent.Height]);
+
   for Index := 0 to pred(FCells.Count) do
   begin
     Cell := TXCell(FCells[Index]);

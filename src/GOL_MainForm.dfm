@@ -1,6 +1,7 @@
 object GOLMainForm: TGOLMainForm
   Left = 234
   Top = 59
+  BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Game of Life'
   ClientHeight = 861
   ClientWidth = 1304
@@ -11,6 +12,7 @@ object GOLMainForm: TGOLMainForm
   Font.Name = 'Segoe UI'
   Font.Style = []
   KeyPreview = True
+  Scaled = False
   TextHeight = 25
   object pnlGame: TPanel
     Left = 0
