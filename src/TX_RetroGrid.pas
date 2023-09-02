@@ -101,7 +101,8 @@ type
     procedure OnConfigUpdate(Sender: TObject);
   protected
     FForceRedraw: boolean;
-    FIsMouseDown: boolean;
+    FLeftMouseDown : boolean;
+    FRightMouseDown : boolean;
     procedure Paint; override;
     procedure Resize; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
@@ -113,7 +114,8 @@ type
     function ImportState(NewState: string): boolean; virtual;
     function ExportState: string; virtual;
     property Cells: TXCellList read FCells write FCells;
-    property IsMouseDown : boolean read FIsMouseDown;
+    property IsLeftMouseDown : boolean read FLeftMouseDown;
+    property IsRightMouseDown : boolean read FRightMouseDown;
     property Config: TXGridConfig read FGridConf;
   published
     property OnResize;
@@ -429,7 +431,8 @@ begin
   ParentBackground := False;
   FForceRedraw := True;
 
-  FIsMouseDown             := False;
+  FLeftMouseDown           := False;
+  FRightMouseDown          := False;
   FGridConf                := TXGridConfig.Create;
   FGridConf.OnConfigUpdate := OnConfigUpdate;
   FCells                   := TXCellList.Create(True, FGridConf);
@@ -497,18 +500,16 @@ end;
 procedure TXRetroGrid.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
-  if Button = mbLeft then
-  begin
-    FIsMouseDown := True;
-  end;
+  FLeftMouseDown := Button = mbLeft;
+  FRightMouseDown := Button = mbRight;
 end;
 
 {------------------------------------------------------------------------------}
 procedure TXRetroGrid.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
-  if Button = mbLeft then
-    FIsMouseDown := False;
+  FLeftMouseDown := False;
+  FRightMouseDOwn := False;
 end;
 
 {------------------------------------------------------------------------------}
@@ -518,10 +519,7 @@ var
   ALeft, ATop, ARight, ABottom: integer;
   RowIndex, ColIndex, CellWidth, CellHeight: integer;
 begin
-  // TODO
-  //GameState := gsStopped;
-
-  CellWidth  := floor(Width / FGridConf.ColumnCount);
+  CellWidth  := floor(Width / Config.ColumnCount);
   case Config.LayoutType of
     gltSquare:  begin
                   ColIndex := 0;

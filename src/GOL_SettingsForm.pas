@@ -14,7 +14,7 @@ uses
   ExtCtrls,
   StdCtrls,
   TX_RetroGrid,
-  GOL_ExampleStructures,
+  GOL_ExamplePatterns,
   GOL_GameOfLife;
 
 type
@@ -34,8 +34,10 @@ type
     chkStopOnDeath: TCheckBox;
     chkStopOnStagnation: TCheckBox;
     Label1: TLabel;
-    cmbExampleStructures: TComboBox;
-    btnApplyStructure: TButton;
+    cmbPatterns: TComboBox;
+    btnLoadOrApplyPattern: TButton;
+    Label2: TLabel;
+    btnExport: TButton;
     procedure btnCloseClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure cmbGenLengthSecsChange(Sender: TObject);
@@ -47,11 +49,14 @@ type
     procedure chkInfiniteGridClick(Sender: TObject);
     procedure chkStopOnDeathClick(Sender: TObject);
     procedure chkStopOnStagnationClick(Sender: TObject);
-    procedure btnApplyStructureClick(Sender: TObject);
+    procedure btnLoadOrApplyPatternClick(Sender: TObject);
+    procedure btnExportClick(Sender: TObject);
+    procedure cmbPatternsChange(Sender: TObject);
   private
     FInitialising: boolean;
     FOnClose: TNotifyEvent;
     FGameThread: TGOLGameThread;
+    procedure ResetForm;
   public
     constructor Create(AOwner: TComponent; AGameThread: TGOLGameThread; AOnClose: TNotifyEvent); reintroduce;
   end;
@@ -70,8 +75,6 @@ end;
 
 {------------------------------------------------------------------------------}
 procedure TGOLSettingsForm.FormShow(Sender: TObject);
-var
-  Index: integer;
 begin
   if FGameThread = nil then
   begin
@@ -79,6 +82,14 @@ begin
     Exit;
   end;
 
+  ResetForm;
+end;
+
+{------------------------------------------------------------------------------}
+procedure TGOLSettingsForm.ResetForm;
+var
+  Index : integer;
+begin
   FInitialising := True;
 
   cmbGenLengthSecs.Items.Add('0.05');
@@ -115,6 +126,15 @@ begin
     Exit;
 
   FGameThread.GenerationLengthMillis := floor(StrToFloat(cmbGenLengthSecs.Items[cmbGenLengthSecs.ItemIndex]) * 1000);
+end;
+
+{------------------------------------------------------------------------------}
+procedure TGOLSettingsForm.cmbPatternsChange(Sender: TObject);
+begin
+  if cmbPatterns.ItemIndex = 0 then
+    btnLoadOrApplyPattern.Caption := 'Select File'
+  else
+    btnLoadOrApplyPattern.Caption := 'Apply';
 end;
 
 {------------------------------------------------------------------------------}
@@ -192,16 +212,83 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-procedure TGOLSettingsForm.btnApplyStructureClick(Sender: TObject);
+procedure TGOLSettingsForm.btnLoadOrApplyPatternClick(Sender: TObject);
+const
+  AutoStart = False;
+var
+  FileDialog : TOpenDialog;
+  StateStrs : TStringList;
+  State : string;
 begin
   FGameThread.Reset;
-  FGameThread.ImportState(EXAMPLE_STRUCTURES[cmbExampleStructures.ItemIndex + 1], true);
+
+  if cmbPatterns.ItemIndex = 0 then
+  begin
+    FileDialog := TOpenDialog.Create(self);
+    try
+      FileDialog.Title := 'Load your Game of Life pattern and configuration';
+      FileDialog.InitialDir := GetCurrentDir;
+      FileDialog.Filter := 'Game of Life Pattern (.gol)|*.gol';
+
+      if not FileDialog.Execute(0) then
+        Exit;
+
+      StateStrs := TStringList.Create;
+      try
+        StateStrs.LoadFromFile(FileDialog.FileName);
+        State := StateStrs.Text;
+      finally
+        StateStrs.Free;
+      end;
+    finally
+      FileDialog.Free;
+    end;
+
+    if (State = '') or (Pos(':', State) = 0) then
+      Exit;
+
+    FGameThread.ImportState(State, AutoStart);
+  end
+  else
+    FGameThread.ImportState(EXAMPLE_PATTERNS[cmbPatterns.ItemIndex], AutoStart);
+
+  ResetForm;
 end;
 
 {------------------------------------------------------------------------------}
 procedure TGOLSettingsForm.btnCloseClick(Sender: TObject);
 begin
   Close;
+end;
+
+{------------------------------------------------------------------------------}
+procedure TGOLSettingsForm.btnExportClick(Sender: TObject);
+var
+  FileDialog : TSaveDialog;
+  StateStrs : TStringList;
+begin
+  FileDialog := TSaveDialog.Create(self);
+  try
+    FileDialog.Title := 'Save your Game of Life pattern and configuration';
+    FileDialog.InitialDir := GetCurrentDir;
+    FileDialog.Filter := 'Game of Life Pattern (.gol)|*.gol';
+    FileDialog.DefaultExt := 'gol';
+
+    if not FileDialog.Execute(0) then
+      Exit;
+
+    StateStrs := TStringList.Create;
+    try
+      StateStrs.Add(FGameThread.ExportState);
+      StateStrs.SaveToFile(FileDialog.FileName);
+    finally
+      StateStrs.Free;
+    end;
+  finally
+    FileDialog.Free;
+  end;
+
+  ResetForm;
 end;
 
 end.

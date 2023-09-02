@@ -19,7 +19,6 @@ uses
   ExtCtrls,
   StdCtrls,
   GOL_GameOfLife,
-  GOL_ExampleStructures,
   GOL_SettingsForm;
 
 type

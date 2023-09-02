@@ -54,6 +54,7 @@ type
     procedure OnMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure ChangeGameState(ANewState: TGOLGameState);
 
+    procedure GridChanged;
     procedure GameStarted;
     procedure GameStopped;
     procedure GenerationComplete;
@@ -67,6 +68,7 @@ type
     procedure Execute; override;
 
     function ImportState(NewState: string; PlayImmediately: boolean = False): boolean;
+    function ExportState : string;
     function Config : TXGridConfig;
     procedure Invalidate;
     procedure Reset;
@@ -193,6 +195,13 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
+procedure TGOLGameThread.GridChanged;
+begin
+  if Assigned(FOnGridChanged) then
+    FOnGridChanged(self);
+end;
+
+{------------------------------------------------------------------------------}
 procedure TGOLGameThread.GameStarted;
 begin
   if Assigned(FOnGameStarted) then
@@ -218,11 +227,17 @@ end;
 function TGOLGameThread.ImportState(NewState: string; PlayImmediately: boolean = False): boolean;
 begin
   State := gsStopped;
-
   Result := FGrid.ImportState(NewState);
+  Synchronize(GridChanged);
 
   if Result and PlayImmediately then
     State := gsStarted;
+end;
+
+{------------------------------------------------------------------------------}
+function TGOLGameThread.ExportState : string;
+begin
+  Result := FGrid.ExportState;
 end;
 
 {------------------------------------------------------------------------------}
@@ -252,19 +267,19 @@ var
   SelectedCell: TXCell;
 begin
   inherited;
-  if (not FGrid.IsMouseDown) or ((not FDrawWhileGameActive) and (FState <> gsStopped)) then
+  if ((not FGrid.IsLeftMouseDown) and (not FGrid.IsRightMouseDown)) or ((not FDrawWhileGameActive) and (FState <> gsStopped)) then
     Exit;
 
   SelectedCell := TXCell(FGrid.Cells.GetCellAtPoint(Point(X, Y)));
   if SelectedCell = nil then
     Exit;
 
-  SelectedCell.Active := True;
+  SelectedCell.Active := FGrid.IsLeftMouseDown;
 
   if FState = gsStopped then
     FGrid.Invalidate;
 
-  if Assigned(FOnGridChanged) then FOnGridChanged(self);
+  Synchronize(GridChanged);
 end;
 
 {------------------------------------------------------------------------------}
