@@ -23,6 +23,8 @@ object GOLSettingsForm: TGOLSettingsForm
     Height = 390
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 423
+    ExplicitHeight = 389
     DesignSize = (
       427
       390)
@@ -99,7 +101,7 @@ object GOLSettingsForm: TGOLSettingsForm
     object cmbGenLengthSecs: TComboBox
       Left = 220
       Top = 118
-      Width = 190
+      Width = 186
       Height = 29
       AutoCloseUp = True
       Style = csDropDownList
@@ -112,11 +114,12 @@ object GOLSettingsForm: TGOLSettingsForm
       ParentFont = False
       TabOrder = 3
       OnChange = cmbGenLengthSecsChange
+      ExplicitWidth = 182
     end
     object clrAlive: TColorBox
       Left = 220
       Top = 159
-      Width = 190
+      Width = 186
       Height = 22
       Anchors = [akLeft, akTop, akRight]
       Font.Charset = DEFAULT_CHARSET
@@ -127,11 +130,12 @@ object GOLSettingsForm: TGOLSettingsForm
       ParentFont = False
       TabOrder = 4
       OnChange = clrAliveChange
+      ExplicitWidth = 182
     end
     object clrDead: TColorBox
       Left = 220
       Top = 219
-      Width = 189
+      Width = 185
       Height = 22
       Anchors = [akLeft, akTop, akRight]
       Font.Charset = DEFAULT_CHARSET
@@ -142,11 +146,12 @@ object GOLSettingsForm: TGOLSettingsForm
       ParentFont = False
       TabOrder = 6
       OnChange = clrDeadChange
+      ExplicitWidth = 181
     end
     object chkAliveCellColorRandom: TCheckBox
       Left = 220
       Top = 186
-      Width = 190
+      Width = 186
       Height = 17
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Random'
@@ -158,6 +163,7 @@ object GOLSettingsForm: TGOLSettingsForm
       ParentFont = False
       TabOrder = 5
       OnClick = chkAliveCellColorRandomClick
+      ExplicitWidth = 182
     end
     object chkAllowDrawDuringGame: TCheckBox
       Left = 16
@@ -209,9 +215,9 @@ object GOLSettingsForm: TGOLSettingsForm
     object chkStopOnStagnation: TCheckBox
       Left = 16
       Top = 350
-      Width = 289
+      Width = 399
       Height = 25
-      Caption = 'Stop the game when all cells are stable'
+      Caption = 'Stop the game when all cells are stable between states'
       Checked = True
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -244,12 +250,14 @@ object GOLSettingsForm: TGOLSettingsForm
         'Load from file'
         'Gosper Glider Gun'
         'Gopher'
-        'Exploder')
+        'Exploder'
+        'Pulsar (Period 3)'
+        'Heavy-weight Spaceship')
     end
     object btnLoadOrApplyPattern: TButton
       Left = 295
       Top = 32
-      Width = 114
+      Width = 110
       Height = 31
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Select File'
@@ -261,11 +269,12 @@ object GOLSettingsForm: TGOLSettingsForm
       ParentFont = False
       TabOrder = 1
       OnClick = btnLoadOrApplyPatternClick
+      ExplicitWidth = 106
     end
     object btnExport: TButton
       Left = 250
       Top = 74
-      Width = 159
+      Width = 155
       Height = 31
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Export'
@@ -277,6 +286,7 @@ object GOLSettingsForm: TGOLSettingsForm
       ParentFont = False
       TabOrder = 2
       OnClick = btnExportClick
+      ExplicitWidth = 151
     end
   end
   object pnlControls: TPanel
@@ -287,11 +297,13 @@ object GOLSettingsForm: TGOLSettingsForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 389
+    ExplicitWidth = 423
     DesignSize = (
       427
       46)
     object btnClose: TButton
-      Left = 281
+      Left = 277
       Top = 6
       Width = 138
       Height = 35
@@ -305,6 +317,7 @@ object GOLSettingsForm: TGOLSettingsForm
       ParentFont = False
       TabOrder = 0
       OnClick = btnCloseClick
+      ExplicitLeft = 273
     end
   end
 end
