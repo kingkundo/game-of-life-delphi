@@ -230,7 +230,7 @@ begin
       FileDialog.InitialDir := GetCurrentDir;
       FileDialog.Filter := 'Game of Life Pattern (.gol)|*.gol';
 
-      if not FileDialog.Execute(0) then
+      if not FileDialog.Execute then
         Exit;
 
       StateStrs := TStringList.Create;
@@ -274,7 +274,7 @@ begin
     FileDialog.Filter := 'Game of Life Pattern (.gol)|*.gol';
     FileDialog.DefaultExt := 'gol';
 
-    if not FileDialog.Execute(0) then
+    if not FileDialog.Execute then
       Exit;
 
     StateStrs := TStringList.Create;

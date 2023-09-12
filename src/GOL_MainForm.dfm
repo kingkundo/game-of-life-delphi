@@ -1,10 +1,10 @@
 object GOLMainForm: TGOLMainForm
-  Left = 234
-  Top = 59
+  Left = 287
+  Top = 56
+  Width = 1320
+  Height = 900
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Game of Life'
-  ClientHeight = 861
-  ClientWidth = 1304
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,7 +12,9 @@ object GOLMainForm: TGOLMainForm
   Font.Name = 'Segoe UI'
   Font.Style = []
   KeyPreview = True
+  OldCreateOrder = True
   Scaled = False
+  PixelsPerInch = 96
   TextHeight = 25
   object pnlGame: TPanel
     Left = 0
@@ -22,8 +24,6 @@ object GOLMainForm: TGOLMainForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1300
-    ExplicitHeight = 791
   end
   object pnlControls: TPanel
     Left = 0
@@ -37,8 +37,6 @@ object GOLMainForm: TGOLMainForm
     Color = clBtnShadow
     ParentBackground = False
     TabOrder = 1
-    ExplicitTop = 791
-    ExplicitWidth = 1300
     object pnlStatus: TPanel
       Left = 0
       Top = 0
@@ -49,7 +47,6 @@ object GOLMainForm: TGOLMainForm
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 0
-      ExplicitWidth = 423
       object lblGameStatus: TLabel
         Left = 0
         Top = 0
@@ -59,8 +56,6 @@ object GOLMainForm: TGOLMainForm
         Alignment = taCenter
         Caption = 'Game status'
         Layout = tlCenter
-        ExplicitWidth = 103
-        ExplicitHeight = 25
       end
     end
     object pnlButtons: TPanel
@@ -72,13 +67,11 @@ object GOLMainForm: TGOLMainForm
       BevelInner = bvSpace
       ParentColor = True
       TabOrder = 1
-      ExplicitLeft = 496
       object btnClear: TButton
         Left = 402
         Top = 2
         Width = 200
         Height = 65
-        Align = alLeft
         Caption = 'Clear cells'
         TabOrder = 0
         OnClick = btnClearClick
@@ -88,7 +81,6 @@ object GOLMainForm: TGOLMainForm
         Top = 2
         Width = 200
         Height = 65
-        Align = alClient
         Caption = 'Show Options'
         TabOrder = 1
         OnClick = btnOptionsClick
@@ -98,7 +90,6 @@ object GOLMainForm: TGOLMainForm
         Top = 2
         Width = 200
         Height = 65
-        Align = alLeft
         Caption = 'Start game'
         TabOrder = 2
         OnClick = btnStartClick
@@ -108,7 +99,6 @@ object GOLMainForm: TGOLMainForm
         Top = 2
         Width = 200
         Height = 65
-        Align = alLeft
         Caption = 'Stop game'
         TabOrder = 3
         OnClick = btnStopClick
@@ -123,7 +113,6 @@ object GOLMainForm: TGOLMainForm
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 2
-      ExplicitLeft = 423
       object lblGenerationCount: TLabel
         Left = 0
         Top = 0
@@ -133,8 +122,6 @@ object GOLMainForm: TGOLMainForm
         Alignment = taCenter
         AutoSize = False
         Layout = tlCenter
-        ExplicitLeft = 32
-        ExplicitTop = -8
       end
     end
   end

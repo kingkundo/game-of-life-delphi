@@ -552,7 +552,8 @@ begin
                   end;
 
                   Config.RowCount := ColIndex;
-                  CellHeight := floor(Height / Config.RowCount);
+                  if Config.RowCount > 0 then
+                    CellHeight := floor(Height / Config.RowCount);
                 end;
     gltStretch: CellHeight := floor(Height / Config.ColumnCount);
     else

@@ -12,9 +12,11 @@ object GOLSettingsForm: TGOLSettingsForm
   Font.Name = 'Segoe UI'
   Font.Style = []
   KeyPreview = True
+  OldCreateOrder = True
   Position = poMainFormCenter
   OnClose = FormClose
   OnShow = FormShow
+  PixelsPerInch = 96
   TextHeight = 25
   object grpOptions: TGroupBox
     Left = 0
@@ -23,8 +25,6 @@ object GOLSettingsForm: TGOLSettingsForm
     Height = 390
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 423
-    ExplicitHeight = 389
     DesignSize = (
       427
       390)
@@ -111,10 +111,10 @@ object GOLSettingsForm: TGOLSettingsForm
       Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Style = []
+      ItemHeight = 21
       ParentFont = False
       TabOrder = 3
       OnChange = cmbGenLengthSecsChange
-      ExplicitWidth = 182
     end
     object clrAlive: TColorBox
       Left = 220
@@ -127,10 +127,10 @@ object GOLSettingsForm: TGOLSettingsForm
       Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Style = []
+      ItemHeight = 16
       ParentFont = False
       TabOrder = 4
       OnChange = clrAliveChange
-      ExplicitWidth = 182
     end
     object clrDead: TColorBox
       Left = 220
@@ -143,10 +143,10 @@ object GOLSettingsForm: TGOLSettingsForm
       Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Style = []
+      ItemHeight = 16
       ParentFont = False
       TabOrder = 6
       OnChange = clrDeadChange
-      ExplicitWidth = 181
     end
     object chkAliveCellColorRandom: TCheckBox
       Left = 220
@@ -163,7 +163,6 @@ object GOLSettingsForm: TGOLSettingsForm
       ParentFont = False
       TabOrder = 5
       OnClick = chkAliveCellColorRandomClick
-      ExplicitWidth = 182
     end
     object chkAllowDrawDuringGame: TCheckBox
       Left = 16
@@ -241,6 +240,7 @@ object GOLSettingsForm: TGOLSettingsForm
       Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Style = []
+      ItemHeight = 21
       ItemIndex = 0
       ParentFont = False
       TabOrder = 0
@@ -269,7 +269,6 @@ object GOLSettingsForm: TGOLSettingsForm
       ParentFont = False
       TabOrder = 1
       OnClick = btnLoadOrApplyPatternClick
-      ExplicitWidth = 106
     end
     object btnExport: TButton
       Left = 250
@@ -286,7 +285,6 @@ object GOLSettingsForm: TGOLSettingsForm
       ParentFont = False
       TabOrder = 2
       OnClick = btnExportClick
-      ExplicitWidth = 151
     end
   end
   object pnlControls: TPanel
@@ -297,8 +295,6 @@ object GOLSettingsForm: TGOLSettingsForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 389
-    ExplicitWidth = 423
     DesignSize = (
       427
       46)
@@ -317,7 +313,6 @@ object GOLSettingsForm: TGOLSettingsForm
       ParentFont = False
       TabOrder = 0
       OnClick = btnCloseClick
-      ExplicitLeft = 273
     end
   end
 end
