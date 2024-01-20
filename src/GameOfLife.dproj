@@ -139,7 +139,7 @@
             <Form>Form1</Form>
         </DCCReference>
         <DCCReference Include="GOL_ExamplePatterns.pas"/>
-        <DCCReference Include="TX_RetroGrid.pas"/>
+        <DCCReference Include="GOL_RetroGrid.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

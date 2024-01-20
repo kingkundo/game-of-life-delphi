@@ -1,8 +1,8 @@
-unit TX_RetroGrid;
+unit GOL_RetroGrid;
 {
   Copyright 2020 Tom Taylor (kingkundo).
-  This file is part of "TXDelphiLibrary" project.
-  "TXDelphiLibrary" is distributed in the hope that it will be useful,
+  This file is part of "Game Of Life" project.
+  "Game Of Life" is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   ----------------------------------------------------------------------------
@@ -26,16 +26,16 @@ const
   TXDefaultRowCount    = 30;
 
 type
-  TXGridLayoutType         = (gltSquare, gltStretch);
-  TXCellNeighbourDirection = (cndNone, cndTopLeft, cndTop, cndTopRight, cndLeft, cndRight, cndBottomLeft, cndBottom, cndBottomRight);
+  TGOLGridLayoutType         = (gltSquare, gltStretch);
+  TGOLCellNeighbourDirection = (cndNone, cndTopLeft, cndTop, cndTopRight, cndLeft, cndRight, cndBottomLeft, cndBottom, cndBottomRight);
 
-  TXGridConfig = class
+  TGOLGridConfig = class
   private
     FColCount, FRowCount: integer;
     FBackColor, FDefaultActiveCellColor: TColor;
     FInfinite, FStopOnDeath, FStopOnStagnation: boolean;
     FWindowWidth,FWindowHeight : integer;
-    FLayoutType: TXGridLayoutType;
+    FLayoutType: TGOLGridLayoutType;
     FOnUpdate: TNotifyEvent;
     procedure SetColumnCount(ACol: integer);
     procedure SetRowCount(ARow: integer);
@@ -44,11 +44,11 @@ type
     procedure SetStopOnStagnation(AStopStagnation : boolean);
     procedure SetWindowWidth(AWindowWidth : integer);
     procedure SetWindowHeight(AWindowHeight : integer);
-    procedure SetLayoutType(AType: TXGridLayoutType);
+    procedure SetLayoutType(AType: TGOLGridLayoutType);
     procedure SetBackColor(AColor: TColor);
     procedure SetDefaultActiveCellColor(AColor: TColor);
   public
-    constructor Create(ALayoutType: TXGridLayoutType = gltSquare; ABackColor: TColor = clBlack; ADefCellColor: TColor = clRandom; AInfinite: boolean = True; AStopOnDeath : boolean = True; AStopOnStagnation : boolean = True; AColCount: integer = TXDefaultColumnCount; ARowCount: integer = TXDefaultRowCount); virtual;
+    constructor Create(ALayoutType: TGOLGridLayoutType = gltSquare; ABackColor: TColor = clBlack; ADefCellColor: TColor = clRandom; AInfinite: boolean = True; AStopOnDeath : boolean = True; AStopOnStagnation : boolean = True; AColCount: integer = TXDefaultColumnCount; ARowCount: integer = TXDefaultRowCount); virtual;
     property ColumnCount: integer read FColCount write SetColumnCount;
     property RowCount: integer read FRowCount write SetRowCount;
     property Infinite: boolean read FInfinite write SetInfinite;
@@ -57,12 +57,12 @@ type
     property WindowWidth : integer read FWindowWidth write SetWindowWidth;
     property WindowHeight : integer read FWindowHeight write SetWindowHeight;
     property BackColor: TColor read FBackColor write SetBackColor;
-    property LayoutType: TXGridLayoutType read FLayoutType write SetLayoutType;
+    property LayoutType: TGOLGridLayoutType read FLayoutType write SetLayoutType;
     property DefaultActiveCellColor: TColor read FDefaultActiveCellColor write SetDefaultActiveCellColor;
     property OnConfigUpdate: TNotifyEvent write FOnUpdate;
   end;
 
-  TXCell = class
+  TGOLCell = class
   private
     function GetID: string;
   protected
@@ -70,38 +70,38 @@ type
     FRect: TRect;
     FActive: boolean;
     FColor, FRColor: TColor;
-    FDirection: TXCellNeighbourDirection;
+    FDirection: TGOLCellNeighbourDirection;
     function GetStructure : string;
   public
     constructor Create(ACol: integer; ARow: integer; ARect: TRect; AStandardColor: TColor = clRandom; ARandomColor: TColor = clRandom; AActive: boolean = False); virtual;
-    function Clone: TXCell; virtual;
+    function Clone: TGOLCell; virtual;
     property Column: integer read FCol write FCol;
     property Row: integer read FRow write FRow;
     property Rect: TRect read FRect;
     property Active: boolean read FActive write FActive;
     property StandardColor: TColor read FColor write FColor;
     property RandomColor: TColor read FRColor write FRColor;
-    property Direction: TXCellNeighbourDirection read FDirection write FDirection;
+    property Direction: TGOLCellNeighbourDirection read FDirection write FDirection;
     property ID: string read GetID;
     property Structure : string read GetStructure;
   end;
 
-  TXCellList = class(TObjectList)
+  TGOLCellList = class(TObjectList)
   private
-    FGridConf: TXGridConfig;
+    FGridConf: TGOLGridConfig;
     function GetStructure : string;
   public
-    constructor Create(AOwnsObjects: boolean; AGridConf: TXGridConfig); reintroduce;
-    function GetCellAtPoint(APoint: TPoint): TXCell;
-    function GetNeighboursForCellAtIndex(CellIndex: integer; IncludeDiagonals: boolean; ActiveOnly: boolean): TXCellList;
-    function GetNeighboursForCell(SelectedCell: TXCell; IncludeDiagonals: boolean; ActiveOnly: boolean): TXCellList;
+    constructor Create(AOwnsObjects: boolean; AGridConf: TGOLGridConfig); reintroduce;
+    function GetCellAtPoint(APoint: TPoint): TGOLCell;
+    function GetNeighboursForCellAtIndex(CellIndex: integer; IncludeDiagonals: boolean; ActiveOnly: boolean): TGOLCellList;
+    function GetNeighboursForCell(SelectedCell: TGOLCell; IncludeDiagonals: boolean; ActiveOnly: boolean): TGOLCellList;
     property Structure : string read GetStructure;
   end;
 
-  TXRetroGrid = class(TCustomControl)
+  TGOLRetroGrid = class(TCustomControl)
   private
-    FCells: TXCellList;
-    FGridConf: TXGridConfig;
+    FCells: TGOLCellList;
+    FGridConf: TGOLGridConfig;
     procedure InitialiseCells;
     procedure OnConfigUpdate(Sender: TObject);
   protected
@@ -118,10 +118,10 @@ type
     procedure Reset;
     function ImportState(NewState: string): boolean; virtual;
     function ExportState: string; virtual;
-    property Cells: TXCellList read FCells write FCells;
+    property Cells: TGOLCellList read FCells write FCells;
     property IsLeftMouseDown : boolean read FLeftMouseDown;
     property IsRightMouseDown : boolean read FRightMouseDown;
-    property Config: TXGridConfig read FGridConf;
+    property Config: TGOLGridConfig read FGridConf;
   published
     property OnResize;
     property OnMouseMove;
@@ -130,11 +130,11 @@ type
 implementation
 
 {-----------------------}
-{ TXGridConfig          }
+{ TGOLGridConfig        }
 {-----------------------}
 
 {------------------------------------------------------------------------------}
-constructor TXGridConfig.Create(ALayoutType: TXGridLayoutType = gltSquare; ABackColor: TColor = clBlack; ADefCellColor: TColor = clRandom; AInfinite: boolean = True; AStopOnDeath : boolean = True; AStopOnStagnation : boolean = True; AColCount: integer = TXDefaultColumnCount; ARowCount: integer = TXDefaultRowCount);
+constructor TGOLGridConfig.Create(ALayoutType: TGOLGridLayoutType = gltSquare; ABackColor: TColor = clBlack; ADefCellColor: TColor = clRandom; AInfinite: boolean = True; AStopOnDeath : boolean = True; AStopOnStagnation : boolean = True; AColCount: integer = TXDefaultColumnCount; ARowCount: integer = TXDefaultRowCount);
 begin
   FLayoutType := ALayoutType;
   FInfinite := AInfinite;
@@ -147,7 +147,7 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-procedure TXGridConfig.SetColumnCount(ACol: integer);
+procedure TGOLGridConfig.SetColumnCount(ACol: integer);
 begin
   FColCount := ACol;
   if Assigned(FOnUpdate) then
@@ -155,7 +155,7 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-procedure TXGridConfig.SetRowCount(ARow: integer);
+procedure TGOLGridConfig.SetRowCount(ARow: integer);
 begin
   FRowCount := ARow;
   if Assigned(FOnUpdate) then
@@ -163,7 +163,7 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-procedure TXGridConfig.SetInfinite(AInfinite: boolean);
+procedure TGOLGridConfig.SetInfinite(AInfinite: boolean);
 begin
   FInfinite := AInfinite;
   if Assigned(FOnUpdate) then
@@ -171,7 +171,7 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-procedure TXGridConfig.SetStopOnDeath(AStopDeath : boolean);
+procedure TGOLGridConfig.SetStopOnDeath(AStopDeath : boolean);
 begin
   FStopOnDeath := AStopDeath;
   if Assigned(FOnUpdate) then
@@ -179,7 +179,7 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-procedure TXGridConfig.SetStopOnStagnation(AStopStagnation : boolean);
+procedure TGOLGridConfig.SetStopOnStagnation(AStopStagnation : boolean);
 begin
   FStopOnStagnation := AStopStagnation;
   if Assigned(FOnUpdate) then
@@ -187,7 +187,7 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-procedure TXGridConfig.SetWindowWidth(AWindowWidth : integer);
+procedure TGOLGridConfig.SetWindowWidth(AWindowWidth : integer);
 begin
   FWindowWidth := AWindowWidth;
   if Assigned(FOnUpdate) then
@@ -195,7 +195,7 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-procedure TXGridConfig.SetWindowHeight(AWindowHeight : integer);
+procedure TGOLGridConfig.SetWindowHeight(AWindowHeight : integer);
 begin
   FWindowHeight := AWindowHeight;
   if Assigned(FOnUpdate) then
@@ -203,7 +203,7 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-procedure TXGridConfig.SetLayoutType(AType: TXGridLayoutType);
+procedure TGOLGridConfig.SetLayoutType(AType: TGOLGridLayoutType);
 begin
   FLayoutType := AType;
   if Assigned(FOnUpdate) then
@@ -211,7 +211,7 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-procedure TXGridConfig.SetBackColor(AColor: TColor);
+procedure TGOLGridConfig.SetBackColor(AColor: TColor);
 begin
   FBackColor := AColor;
   if Assigned(FOnUpdate) then
@@ -219,7 +219,7 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-procedure TXGridConfig.SetDefaultActiveCellColor(AColor: TColor);
+procedure TGOLGridConfig.SetDefaultActiveCellColor(AColor: TColor);
 begin
   FDefaultActiveCellColor := AColor;
   if Assigned(FOnUpdate) then
@@ -227,11 +227,11 @@ begin
 end;
 
 {-----------------------}
-{ TXCell                }
+{ TGOLCell              }
 {-----------------------}
 
 {------------------------------------------------------------------------------}
-constructor TXCell.Create(ACol: integer; ARow: integer; ARect: TRect; AStandardColor: TColor = clRandom; ARandomColor: TColor = clRandom; AActive: boolean = False);
+constructor TGOLCell.Create(ACol: integer; ARow: integer; ARect: TRect; AStandardColor: TColor = clRandom; ARandomColor: TColor = clRandom; AActive: boolean = False);
 begin
   FDirection := cndNone;
   FCol       := ACol;
@@ -251,44 +251,44 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-function TXCell.Clone: TXCell;
+function TGOLCell.Clone: TGOLCell;
 begin
-  Result := TXCell.Create(FCol, FRow, FRect, FColor, FRColor, FActive);
+  Result := TGOLCell.Create(FCol, FRow, FRect, FColor, FRColor, FActive);
 end;
 
 {------------------------------------------------------------------------------}
-function TXCell.GetID: string;
+function TGOLCell.GetID: string;
 begin
   Result := format('%d:%d', [FCol, FRow]);
 end;
 
 {------------------------------------------------------------------------------}
-function TXCell.GetStructure: string;
+function TGOLCell.GetStructure: string;
 begin
   Result := format('%d;%d:%s:%d', [self.FRow, self.FCol, BoolToStr(self.FActive), ord(self.FDirection)]);
 end;
 
 {-----------------------}
-{ TXCellList            }
+{ TGOLCellList          }
 {-----------------------}
 
 {------------------------------------------------------------------------------}
-constructor TXCellList.Create(AOwnsObjects: Boolean; AGridConf: TXGridConfig);
+constructor TGOLCellList.Create(AOwnsObjects: Boolean; AGridConf: TGOLGridConfig);
 begin
   inherited Create(AOwnsObjects);
   FGridConf := AGridConf;
 end;
 
 {------------------------------------------------------------------------------}
-function TXCellList.GetCellAtPoint(APoint: TPoint): TXCell;
+function TGOLCellList.GetCellAtPoint(APoint: TPoint): TGOLCell;
 var
   Index: integer;
-  ACell: TXCell;
+  ACell: TGOLCell;
 begin
   Result := nil;
   for Index := 0 to pred(Count) do
   begin
-    ACell := TXCell(Items[Index]);
+    ACell := TGOLCell(Items[Index]);
     if ptinrect(ACell.Rect, APoint) then
     begin
       Result := ACell;
@@ -298,27 +298,27 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-function TXCellList.GetNeighboursForCellAtIndex(CellIndex: integer; IncludeDiagonals: boolean; ActiveOnly: boolean): TXCellList;
+function TGOLCellList.GetNeighboursForCellAtIndex(CellIndex: integer; IncludeDiagonals: boolean; ActiveOnly: boolean): TGOLCellList;
 var
-  SelectedCell: TXCell;
+  SelectedCell: TGOLCell;
 begin
   if (Count < 0) or (Count > CellIndex) then
     SelectedCell := nil
   else
-    SelectedCell := TXCell(Items[CellIndex]);
+    SelectedCell := TGOLCell(Items[CellIndex]);
   Result := GetNeighboursForCell(SelectedCell, IncludeDiagonals, ActiveOnly);
 end;
 
 {------------------------------------------------------------------------------}
-function TXCellList.GetStructure: string;
+function TGOLCellList.GetStructure: string;
 var
   Index : integer;
-  ACell : TXCell;
+  ACell : TGOLCell;
 begin
   Result := '';
   for Index := 0 to pred(Count) do
   begin
-    ACell := TXCell(Items[Index]);
+    ACell := TGOLCell(Items[Index]);
     if Index > 0 then
       Result := Result + ';';
     Result := Result + ACell.Structure;
@@ -326,13 +326,13 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-function TXCellList.GetNeighboursForCell(SelectedCell: TXCell; IncludeDiagonals: boolean; ActiveOnly: boolean): TXCellList;
+function TGOLCellList.GetNeighboursForCell(SelectedCell: TGOLCell; IncludeDiagonals: boolean; ActiveOnly: boolean): TGOLCellList;
 var
   LoopIndex, TopRow, BottomRow, LeftColumn, RightColumn: integer;
   ExitNumber: integer;
-  ACell: TXCell;
+  ACell: TGOLCell;
 begin
-  Result := TXCellList.Create(False, FGridConf);
+  Result := TGOLCellList.Create(False, FGridConf);
 
   if SelectedCell = nil then
     Exit;
@@ -377,7 +377,7 @@ begin
 
   for LoopIndex := 0 to pred(Count) do
   begin
-    ACell := TXCell(Items[LoopIndex]);
+    ACell := TGOLCell(Items[LoopIndex]);
 
     if ACell.Direction <> cndNone then
       ACell.Direction := cndNone;
@@ -441,11 +441,11 @@ begin
 end;
 
 {-----------------------}
-{ TXGrid                }
+{ TGOLGrid              }
 {-----------------------}
 
 {------------------------------------------------------------------------------}
-constructor TXRetroGrid.Create(AOwner: TComponent);
+constructor TGOLRetroGrid.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   DoubleBuffered := True;
@@ -454,13 +454,13 @@ begin
 
   FLeftMouseDown           := False;
   FRightMouseDown          := False;
-  FGridConf                := TXGridConfig.Create;
+  FGridConf                := TGOLGridConfig.Create;
   FGridConf.OnConfigUpdate := OnConfigUpdate;
-  FCells                   := TXCellList.Create(True, FGridConf);
+  FCells                   := TGOLCellList.Create(True, FGridConf);
 end;
 
 {------------------------------------------------------------------------------}
-destructor TXRetroGrid.Destroy;
+destructor TGOLRetroGrid.Destroy;
 begin
   FCells.Free;
   FGridConf.Free;
@@ -468,10 +468,10 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-procedure TXRetroGrid.Paint;
+procedure TGOLRetroGrid.Paint;
 var
   Index: integer;
-  ACell: TXCell;
+  ACell: TGOLCell;
 begin
   inherited;
 
@@ -480,7 +480,7 @@ begin
 
   for Index := 0 to pred(FCells.Count) do
   begin
-    ACell := TXCell(FCells.Items[Index]);
+    ACell := TGOLCell(FCells.Items[Index]);
 
     if ACell.Active then
     begin
@@ -499,26 +499,26 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-procedure TXRetroGrid.OnConfigUpdate(Sender: TObject);
+procedure TGOLRetroGrid.OnConfigUpdate(Sender: TObject);
 var
   Index: integer;
 begin
   FForceRedraw := True;
 
   for Index := 0 to pred(FCells.Count) do
-    TXCell(FCells[Index]).StandardColor := FGridConf.FDefaultActiveCellColor;
+    TGOLCell(FCells[Index]).StandardColor := FGridConf.FDefaultActiveCellColor;
 
   Invalidate;
 end;
 
 {------------------------------------------------------------------------------}
-procedure TXRetroGrid.Resize;
+procedure TGOLRetroGrid.Resize;
 begin
   inherited;
 end;
 
 {------------------------------------------------------------------------------}
-procedure TXRetroGrid.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+procedure TGOLRetroGrid.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
   FLeftMouseDown := Button = mbLeft;
@@ -526,7 +526,7 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-procedure TXRetroGrid.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+procedure TGOLRetroGrid.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
   FLeftMouseDown := False;
@@ -534,9 +534,9 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-procedure TXRetroGrid.InitialiseCells;
+procedure TGOLRetroGrid.InitialiseCells;
 var
-  ACell: TXCell;
+  ACell: TGOLCell;
   ALeft, ATop, ARight, ABottom: integer;
   RowIndex, ColIndex, CellWidth, CellHeight: integer;
 begin
@@ -569,7 +569,7 @@ begin
       ATop    := CellHeight * RowIndex;
       ARight  := ALeft + CellWidth;
       ABottom := ATop + CellHeight;
-      ACell   := TXCell.Create(ColIndex, RowIndex, Rect(ALeft, ATop, ARight, ABottom), Config.DefaultActiveCellColor);
+      ACell   := TGOLCell.Create(ColIndex, RowIndex, Rect(ALeft, ATop, ARight, ABottom), Config.DefaultActiveCellColor);
       FCells.Add(ACell);
     end;
   end;
@@ -579,15 +579,15 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-procedure TXRetroGrid.Reset;
+procedure TGOLRetroGrid.Reset;
 begin
   InitialiseCells;
 end;
 
 {------------------------------------------------------------------------------}
-function TXRetroGrid.ImportState(NewState: string): boolean;
+function TGOLRetroGrid.ImportState(NewState: string): boolean;
 var
-  CurrentCell: TXCell;
+  CurrentCell: TGOLCell;
   Index, LoadedIndex: integer;
   GridSettings, CellSettings: TStringList;
 begin
@@ -630,7 +630,7 @@ begin
         if (CellSettings.Count < 3) or (LoadedIndex < 0) or (LoadedIndex >= Cells.Count) then
           continue;
 
-        CurrentCell := TXCell(FCells[LoadedIndex]);
+        CurrentCell := TGOLCell(FCells[LoadedIndex]);
         if CurrentCell <> nil then
         begin
           CurrentCell.StandardColor := StrToIntDef(CellSettings[1], 255);
@@ -651,9 +651,9 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-function TXRetroGrid.ExportState: string;
+function TGOLRetroGrid.ExportState: string;
 var
-  Cell: TXCell;
+  Cell: TGOLCell;
   Index, Infinite: integer;
 begin
   Result := '';
@@ -678,7 +678,7 @@ begin
 
   for Index := 0 to pred(FCells.Count) do
   begin
-    Cell := TXCell(FCells[Index]);
+    Cell := TGOLCell(FCells[Index]);
     if Cell.Active then
       Result := format('%s:%d-%d-%d', [Result, Index, Cell.StandardColor, Cell.RandomColor]);
   end;

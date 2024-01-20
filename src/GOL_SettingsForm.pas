@@ -13,7 +13,7 @@ uses
   Dialogs,
   ExtCtrls,
   StdCtrls,
-  TX_RetroGrid,
+  GOL_RetroGrid,
   GOL_ExamplePatterns,
   GOL_GameOfLife;
 
@@ -38,6 +38,7 @@ type
     btnLoadOrApplyPattern: TButton;
     Label2: TLabel;
     btnExport: TButton;
+    Label3: TLabel;
     procedure btnCloseClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure cmbGenLengthSecsChange(Sender: TObject);

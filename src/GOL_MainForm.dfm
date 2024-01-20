@@ -1,10 +1,10 @@
 object GOLMainForm: TGOLMainForm
   Left = 287
   Top = 56
-  Width = 1320
-  Height = 900
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Game of Life'
+  ClientHeight = 861
+  ClientWidth = 1304
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,9 +12,7 @@ object GOLMainForm: TGOLMainForm
   Font.Name = 'Segoe UI'
   Font.Style = []
   KeyPreview = True
-  OldCreateOrder = True
   Scaled = False
-  PixelsPerInch = 96
   TextHeight = 25
   object pnlGame: TPanel
     Left = 0
@@ -48,14 +46,19 @@ object GOLMainForm: TGOLMainForm
       ParentColor = True
       TabOrder = 0
       object lblGameStatus: TLabel
-        Left = 0
-        Top = 0
-        Width = 427
-        Height = 69
+        AlignWithMargins = True
+        Left = 20
+        Top = 3
+        Width = 404
+        Height = 63
+        Margins.Left = 20
         Align = alClient
-        Alignment = taCenter
         Caption = 'Game status'
         Layout = tlCenter
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 103
+        ExplicitHeight = 25
       end
     end
     object pnlButtons: TPanel

@@ -12,11 +12,9 @@ object GOLSettingsForm: TGOLSettingsForm
   Font.Name = 'Segoe UI'
   Font.Style = []
   KeyPreview = True
-  OldCreateOrder = True
   Position = poMainFormCenter
   OnClose = FormClose
   OnShow = FormShow
-  PixelsPerInch = 96
   TextHeight = 25
   object grpOptions: TGroupBox
     Left = 0
@@ -25,6 +23,8 @@ object GOLSettingsForm: TGOLSettingsForm
     Height = 390
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 423
+    ExplicitHeight = 389
     DesignSize = (
       427
       390)
@@ -101,7 +101,7 @@ object GOLSettingsForm: TGOLSettingsForm
     object cmbGenLengthSecs: TComboBox
       Left = 220
       Top = 118
-      Width = 186
+      Width = 182
       Height = 29
       AutoCloseUp = True
       Style = csDropDownList
@@ -111,15 +111,15 @@ object GOLSettingsForm: TGOLSettingsForm
       Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Style = []
-      ItemHeight = 21
       ParentFont = False
       TabOrder = 3
       OnChange = cmbGenLengthSecsChange
+      ExplicitWidth = 178
     end
     object clrAlive: TColorBox
       Left = 220
       Top = 159
-      Width = 186
+      Width = 182
       Height = 22
       Anchors = [akLeft, akTop, akRight]
       Font.Charset = DEFAULT_CHARSET
@@ -127,15 +127,15 @@ object GOLSettingsForm: TGOLSettingsForm
       Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Style = []
-      ItemHeight = 16
       ParentFont = False
       TabOrder = 4
       OnChange = clrAliveChange
+      ExplicitWidth = 178
     end
     object clrDead: TColorBox
       Left = 220
       Top = 219
-      Width = 185
+      Width = 181
       Height = 22
       Anchors = [akLeft, akTop, akRight]
       Font.Charset = DEFAULT_CHARSET
@@ -143,15 +143,15 @@ object GOLSettingsForm: TGOLSettingsForm
       Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Style = []
-      ItemHeight = 16
       ParentFont = False
       TabOrder = 6
       OnChange = clrDeadChange
+      ExplicitWidth = 177
     end
     object chkAliveCellColorRandom: TCheckBox
       Left = 220
       Top = 186
-      Width = 186
+      Width = 182
       Height = 17
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Random'
@@ -163,6 +163,7 @@ object GOLSettingsForm: TGOLSettingsForm
       ParentFont = False
       TabOrder = 5
       OnClick = chkAliveCellColorRandomClick
+      ExplicitWidth = 178
     end
     object chkAllowDrawDuringGame: TCheckBox
       Left = 16
@@ -240,7 +241,6 @@ object GOLSettingsForm: TGOLSettingsForm
       Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Style = []
-      ItemHeight = 21
       ItemIndex = 0
       ParentFont = False
       TabOrder = 0
@@ -257,7 +257,7 @@ object GOLSettingsForm: TGOLSettingsForm
     object btnLoadOrApplyPattern: TButton
       Left = 295
       Top = 32
-      Width = 110
+      Width = 106
       Height = 31
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Select File'
@@ -269,11 +269,12 @@ object GOLSettingsForm: TGOLSettingsForm
       ParentFont = False
       TabOrder = 1
       OnClick = btnLoadOrApplyPatternClick
+      ExplicitWidth = 102
     end
     object btnExport: TButton
       Left = 250
       Top = 74
-      Width = 155
+      Width = 151
       Height = 31
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Export'
@@ -285,6 +286,7 @@ object GOLSettingsForm: TGOLSettingsForm
       ParentFont = False
       TabOrder = 2
       OnClick = btnExportClick
+      ExplicitWidth = 147
     end
   end
   object pnlControls: TPanel
@@ -295,15 +297,34 @@ object GOLSettingsForm: TGOLSettingsForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    DesignSize = (
-      427
-      46)
+    ExplicitTop = 389
+    ExplicitWidth = 423
+    object Label3: TLabel
+      AlignWithMargins = True
+      Left = 10
+      Top = 3
+      Width = 100
+      Height = 33
+      Margins.Left = 10
+      Margins.Bottom = 10
+      Align = alLeft
+      Caption = 'King Kundo 2020'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      Layout = tlBottom
+      ExplicitLeft = 3
+      ExplicitHeight = 17
+    end
     object btnClose: TButton
-      Left = 277
-      Top = 6
+      Left = 289
+      Top = 0
       Width = 138
-      Height = 35
-      Anchors = [akRight, akBottom]
+      Height = 46
+      Align = alRight
       Caption = 'Close'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -313,6 +334,9 @@ object GOLSettingsForm: TGOLSettingsForm
       ParentFont = False
       TabOrder = 0
       OnClick = btnCloseClick
+      ExplicitLeft = 269
+      ExplicitTop = 6
+      ExplicitHeight = 35
     end
   end
 end

@@ -11,7 +11,7 @@ unit GOL_GameOfLife;
 interface
 
 uses
-  TX_RetroGrid,
+  GOL_RetroGrid,
   Math,
   Types,
   Windows,
@@ -36,7 +36,7 @@ type
   private
     FLastState : TGOLGameState;
     FState : TGOLGameState;
-    FGrid : TXRetroGrid;
+    FGrid : TGOLRetroGrid;
 
     F1PreviousGenerationCellStructure, F2PreviousGenerationCellStructure : string;
 
@@ -69,14 +69,14 @@ type
 
     function ImportPattern(NewState: string; PlayImmediately: boolean = False): boolean;
     function ExportPattern : string;
-    function Config : TXGridConfig;
+    function Config : TGOLGridConfig;
     procedure Invalidate;
     procedure Reset;
 
     procedure SuspendYield;
   published
     property State : TGOLGameState read FState write ChangeGameState;
-    property Grid : TXRetroGrid read FGrid;
+    property Grid : TGOLRetroGrid read FGrid;
     property GenerationLengthMillis: integer read FGenerationLengthMillis write FGenerationLengthMillis;
     property AllowDrawDuringGame: boolean read FDrawWhileGameActive write FDrawWhileGameActive;
     property OnGenerationComplete: TGOLOnGenerationComplete read FGenerationComplete write FGenerationComplete;
@@ -109,7 +109,7 @@ begin
   FMenuEnabled         := True;
   GenerationLengthMillis := 100;
 
-  FGrid := TXRetroGrid.Create(AOwner);
+  FGrid := TGOLRetroGrid.Create(AOwner);
   FGrid.OnResize := OnResize;
   FGrid.OnMouseMove := OnMouseMove;
 end;
@@ -126,8 +126,8 @@ procedure TGOLGameThread.Execute;
 var
   Index: integer;
   AllCellsDead: boolean;
-  CurrentCell: TXCell;
-  PreviousGenerationCells, CurrentCellNeighbours: TXCellList;
+  CurrentCell: TGOLCell;
+  PreviousGenerationCells, CurrentCellNeighbours: TGOLCellList;
 begin
   inherited;
   while not Terminated do
@@ -142,10 +142,10 @@ begin
                       F2PreviousGenerationCellStructure := F1PreviousGenerationCellStructure;
                       F1PreviousGenerationCellStructure := PreviousGenerationCells.Structure;
                       // Create new cell list to represent the all new cells list...
-                      FGrid.Cells := TXCellList.Create(True, FGrid.Config);
+                      FGrid.Cells := TGOLCellList.Create(True, FGrid.Config);
                       for Index := 0 to pred(PreviousGenerationCells.Count) do
                       begin
-                        CurrentCell := TXCell(PreviousGenerationCells.Items[Index]).Clone;
+                        CurrentCell := TGOLCell(PreviousGenerationCells.Items[Index]).Clone;
                         CurrentCellNeighbours := PreviousGenerationCells.GetNeighboursForCell(CurrentCell, True, True);
                         try
                           // If cell is alive and under/overpopulated then die...
@@ -264,13 +264,13 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGOLGameThread.OnMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
 var
-  SelectedCell: TXCell;
+  SelectedCell: TGOLCell;
 begin
   inherited;
   if ((not FGrid.IsLeftMouseDown) and (not FGrid.IsRightMouseDown)) or ((not FDrawWhileGameActive) and (FState <> gsStopped)) then
     Exit;
 
-  SelectedCell := TXCell(FGrid.Cells.GetCellAtPoint(Point(X, Y)));
+  SelectedCell := TGOLCell(FGrid.Cells.GetCellAtPoint(Point(X, Y)));
   if SelectedCell = nil then
     Exit;
 
@@ -283,7 +283,7 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-function TGOLGameThread.Config: TXGridConfig;
+function TGOLGameThread.Config: TGOLGridConfig;
 begin
   Result := FGrid.Config;
 end;
